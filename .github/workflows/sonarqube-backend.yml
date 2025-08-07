@@ -2,19 +2,20 @@ name: Sonar Scanner Backend
 
 on:
   push:
-    branches: ["main", "backend"]
+    branches: ["none"]
     paths:
       - 'backend/**'
   pull_request:
-    branches: ["main", "backend"]
+    branches: ["none"]
     paths:
       - 'backend/**'
+  workflow_dispatch:
 
 jobs:
   build:
     name: Build and analyze
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,7 +41,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          
+
         run: |
           cd backend
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Inventarisierungsmodul-backend-89wehenfefhe89 -Dsonar.projectName='Inventarisierungsmodul' -Dsonar.java.binaries=target/classes -DskipTests
