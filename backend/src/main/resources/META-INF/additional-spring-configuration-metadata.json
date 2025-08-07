@@ -5,6 +5,18 @@
             "type": "java.lang.String",
             "description": "The allowed origin for CORS requests.",
             "defaultValue": "https://insy.hs-esslingen.com"
+        },
+        {
+            "name": "besy.username",
+            "type": "java.lang.String",
+            "description": "The username for BeSy basic authentication.",
+            "defaultValue": "besy"
+        },
+        {
+            "name": "besy.password",
+            "type": "java.lang.String",
+            "description": "The password for BeSy basic authentication.",
+            "defaultValue": "secret"
         }
     ]
 }
