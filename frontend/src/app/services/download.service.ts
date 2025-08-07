@@ -17,7 +17,7 @@ export class DownloadService {
 
   downloadExcel(): Observable<any> {
     const params: any = {
-      'searchText': this.dataSource.getSearchText(),
+      'searchText': this.dataSource.getSearchText()
     }
 
     // Append filter fields to params if they are defined
