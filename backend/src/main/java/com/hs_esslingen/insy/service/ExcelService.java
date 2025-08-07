@@ -3,6 +3,7 @@ package com.hs_esslingen.insy.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -30,10 +31,12 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hs_esslingen.insy.configuration.InventorySpecification;
 import com.hs_esslingen.insy.dto.InventoryExcel;
 import com.hs_esslingen.insy.model.Comment;
 import com.hs_esslingen.insy.model.Company;
@@ -69,14 +72,59 @@ public class ExcelService {
      * @return ResponseEntity containing the Excel file as a Resource
      * @throws IOException if an error occurs while writing the Excel file
      */
-    public ResponseEntity<Resource> exportExcel() throws IOException {
+    public ResponseEntity<Resource> exportExcel(
+            List<Integer> tags,
+            Integer minId,
+            Integer maxId,
+            Integer minPrice,
+            Integer maxPrice,
+            Boolean isDeinventoried,
+            List<String> orderers,
+            List<String> companies,
+            List<String> locations,
+            List<String> costCenters,
+            List<String> serialNumbers,
+            LocalDate createdAfter,
+            LocalDate createdBefore,
+            String searchText) throws IOException {
+
+        // Convert LocalDate query parameters to LocalDateTime
+        // to make filtering work with the database
+
+        // Set start time to 00:00 to include all entries from this date
+        LocalDateTime createdAfterTime = createdAfter != null ? createdAfter.atStartOfDay() : null;
+        // Set end time to 23:59:59 to include all entries until this date
+        LocalDateTime createdBeforeTime = createdBefore != null ? createdBefore.plusDays(1).atStartOfDay().minusNanos(1)
+                : null;
+
+        /*
+         * Creates SQL-like query with the following form:
+         * SELECT * FROM inventories
+         * WHERE
+         * tag_id IN (...)
+         * AND id BETWEEN ...
+         * AND price BETWEEN ...
+         * AND ...
+         */
+        Specification<Inventory> spec = Specification
+                .where(InventorySpecification.hasTagId(tags))
+                .and(InventorySpecification.idBetween(minId, maxId))
+                .and(InventorySpecification.priceBetween(minPrice, maxPrice))
+                .and(InventorySpecification.isDeinventoried(isDeinventoried))
+                .and(InventorySpecification.hasOrderers(orderers))
+                .and(InventorySpecification.hasCompanies(companies))
+                .and(InventorySpecification.hasLocations(locations))
+                .and(InventorySpecification.hasCostCenters(costCenters))
+                .and(InventorySpecification.hasSerialNumbers(serialNumbers))
+                .and(InventorySpecification.createdBetween(createdAfterTime, createdBeforeTime))
+                .and(InventorySpecification.hasSearchText(searchText));
 
         // Build the .xlsx file
         Workbook wb = new HSSFWorkbook();
         Sheet sheet = wb.createSheet("Inventar");
 
         // Fetch all the necessary data
-        List<Inventory> inventoryList = inventoryRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+        List<Inventory> inventoryList = inventoryRepository.findAll(spec, Sort.by(Sort.Direction.ASC, "id"));
 
         // First row font cell style
         String[] headings = {
