@@ -307,4 +307,12 @@ export class ServerTableDataSourceService<T> extends DataSource<T> {
   disconnect(collectionViewer: CollectionViewer): void {
   }
 
+  getSearchText(): string {
+    return this._queryParams.value.currentSearchText;
+  }
+
+  getFilter(): Filter {
+    return this._queryParams.value.currentFilter;
+  }
+
 }

@@ -78,7 +78,7 @@ import { ServerTableDataSourceService } from '../../services/server-table-data-s
 })
 export class InventoryListComponent implements AfterViewInit {
 
-  api = inject(DownloadService);
+  downloadService = inject(DownloadService);
 
   /**
    * Output event emitter that emits the ID of the clicked inventory item.
@@ -148,7 +148,7 @@ export class InventoryListComponent implements AfterViewInit {
   }
 
   downloadInventoryList() {
-    this.api.downloadExcel().subscribe(blob => {
+    this.downloadService.downloadExcel().subscribe(blob => {
       const a = document.createElement('a')
       const objectUrl = URL.createObjectURL(blob)
       a.href = objectUrl
