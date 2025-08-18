@@ -53,8 +53,9 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests(authorize -> authorize
                         // Allow BeSy to create orders
-                        .requestMatchers("/orders/**").hasAnyAuthority("insy", "SYSTEM")
-                        .anyRequest().hasAuthority("insy"))
+                        .requestMatchers("/orders/**").hasAnyAuthority(environment.getProperty("required.keycloak.role",
+                                "insy"), "SYSTEM")
+                        .anyRequest().hasAuthority(environment.getProperty("required.keycloak.role", "insy")))
                 .httpBasic(Customizer.withDefaults()) // Enable HTTP Basic authentication
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwtDecoder -> jwtDecoder.jwtAuthenticationConverter(authenticationConverter)));
