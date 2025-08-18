@@ -1,6 +1,12 @@
 {
     "properties": [
         {
+            "name": "required.keycloak.role",
+            "type": "java.lang.String",
+            "description": "The required Keycloak role for accessing secured endpoints.",
+            "defaultValue": "insy"
+        },
+        {
             "name": "allowed.origin",
             "type": "java.lang.String",
             "description": "The allowed origin for CORS requests.",
