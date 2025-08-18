@@ -53,9 +53,9 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests(authorize -> authorize
                         // Allow BeSy to create orders
-                        .requestMatchers("/orders/**").hasAnyRole("SYSTEM")
+                        .requestMatchers("/orders/**").hasAnyAuthority("insy", "SYSTEM")
                         .anyRequest().hasAuthority("insy"))
-                .httpBasic(Customizer.withDefaults()) // Enable HTTP Basic authentication for BeSy-API
+                .httpBasic(Customizer.withDefaults()) // Enable HTTP Basic authentication
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwtDecoder -> jwtDecoder.jwtAuthenticationConverter(authenticationConverter)));
         return http.build();
@@ -74,7 +74,7 @@ public class SecurityConfig {
         UserDetails user = User.builder()
                 .username(environment.getProperty("besy.username", "besy"))
                 .password(encoder.encode(environment.getProperty("besy.password", "secret")))
-                .roles("SYSTEM")
+                .authorities("SYSTEM")
                 .build();
         return new InMemoryUserDetailsManager(user);
     }
