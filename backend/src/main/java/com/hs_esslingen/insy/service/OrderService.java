@@ -81,9 +81,10 @@ public class OrderService {
 
         if (dtos != null) {
             for (OrderCreateDTO dto : dtos) {
-                boolean exists = orderRepository.findByBesyId(dto.getOrderId()).isPresent();
-                if (exists)
+                Order existingOrder = orderRepository.findByBesyId(dto.getOrderId()).orElse(null);
+                if (existingOrder != null && existingOrder.getDeletedAt() == null) {
                     continue;
+                }
 
                 Order order = Order.builder()
                         .description("Bestellung " + dto.getOrderId())
