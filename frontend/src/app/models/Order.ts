@@ -6,6 +6,7 @@ export interface Order {
   price: number,
   company: string,
   order_date: string,
+  cost_center: string,
   orderer: string,
   articles: Article[],
 }

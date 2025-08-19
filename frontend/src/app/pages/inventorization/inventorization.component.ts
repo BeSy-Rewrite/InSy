@@ -604,9 +604,14 @@ export class InventorizationComponent {
    */
   private _setArticleAsInventoryItem(articleStrings: WritableSignal<string[]>) {
     [this.currentArticleId.orderId, this.currentArticleId.articleId] = articleStrings()[0].split(',').map(Number);
-    this.orderService.getOrderArticleByIds(this.currentArticleId.orderId, this.currentArticleId.articleId).subscribe({
-      next: (article) => {
-        this.editableInventoryItem.set(inventoryItemFromArticle(article));
+
+    forkJoin({
+      order: this.orderService.getOrderById(this.currentArticleId.orderId),
+      article: this.orderService.getOrderArticleByIds(this.currentArticleId.orderId, this.currentArticleId.articleId)
+    }).subscribe({
+      next: ({ order, article }) => {
+        console.log('Bestellung geladen', order);
+        this.editableInventoryItem.set(inventoryItemFromArticle(article, order.cost_center));
         this.tags.set(article.tags ?? []);
         articleStrings.update(articles => articles.slice(1)); // Remove the first article after setting it
       },

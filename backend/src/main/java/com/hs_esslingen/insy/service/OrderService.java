@@ -26,6 +26,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
+    private final CostCenterService costCenterService;
     private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     /**
@@ -80,25 +81,26 @@ public class OrderService {
 
         if (dtos != null) {
             for (OrderCreateDTO dto : dtos) {
-                boolean exists = orderRepository.findByBesyId(dto.getOrder_id()).isPresent();
+                boolean exists = orderRepository.findByBesyId(dto.getOrderId()).isPresent();
                 if (exists)
                     continue;
 
                 Order order = Order.builder()
-                        .description("Bestellung " + dto.getOrder_id())
-                        .price(dto.getOrder_quote_price())
-                        .company(dto.getSupplier_name())
-                        .createdAt(dto.getOrder_created_date())
-                        .user(dto.getUser_name())
-                        .besyId(dto.getOrder_id())
+                        .description("Bestellung " + dto.getOrderId())
+                        .price(dto.getOrderQuotePrice())
+                        .company(dto.getSupplierName())
+                        .createdAt(dto.getOrderCreatedDate())
+                        .costCenter(costCenterService.resolveCostCenter(dto.getCostCenter()))
+                        .user(dto.getUserName())
+                        .besyId(dto.getOrderId())
                         .build();
 
                 for (ItemCreateDTO item : dto.getItems()) {
                     Article article = Article.builder()
                             .description(item.getItem_name())
                             .price(item.getItem_price_per_unit())
-                            .company(dto.getSupplier_name())
-                            .user(dto.getUser_name())
+                            .company(dto.getSupplierName())
+                            .user(dto.getUserName())
                             .build();
                     order.addArticle(article);
                 }

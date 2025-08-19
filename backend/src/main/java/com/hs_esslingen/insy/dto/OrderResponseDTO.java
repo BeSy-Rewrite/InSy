@@ -20,6 +20,9 @@ public class OrderResponseDTO {
 
     private String company;
 
+    @JsonProperty("cost_center")
+    private String costCenter;
+
     @JsonProperty("deleted_at")
     private LocalDateTime deletedAt;
 
