@@ -38,18 +38,18 @@ export function unLocalizePrice(price: string): number {
  * @param article - The Article object to convert.
  * @returns The converted InventoryItem object.
  */
-export function inventoryItemFromArticle(article: Article): InventoryItem {
+export function inventoryItemFromArticle(article: Article, costCenter: string): InventoryItem {
     return {
         id: article.inventories_id,
         description: article.description,
         serial_number: article.inventories_serial_number,
         price: article.price,
         location: article.location,
-        cost_center: '', // Assuming cost center is not available in Article
+        cost_center: costCenter,
         company: article.company,
         orderer: article.orderer,
-        is_deinventoried: false, // Assuming this is not available in Article
-        created_at: new Date().toISOString(), // Assuming current date as created_at
-        tags: [] // Assuming no tags are available in Article
+        is_deinventoried: false,
+        created_at: new Date().toISOString(),
+        tags: []
     } as InventoryItem;
 }
