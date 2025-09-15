@@ -45,6 +45,8 @@ export class OrdersComponent implements OnInit {
 
   // get all active orders
   ngOnInit(): void {
+    // Check for new articles in orders when the user navigates to this page
+    this.orderService.openArticlesChanged.next();
     // Fetch orders and add checked attribute to each article, to track which orders the user has selected for inventorization
     this.orderService.getOpenOrders().subscribe(orders => {
       this.orders = orders.map(order => ({
