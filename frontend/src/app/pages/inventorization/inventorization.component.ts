@@ -537,8 +537,6 @@ export class InventorizationComponent {
       this.router.navigate(['/new'], { queryParams: { itemArticles: [...this.itemArticles()], extensionArticles: this.extensionArticles() } });
     } else if (this.extensionArticles().length > 0) {
       this.router.navigate(['/new-extension'], { queryParams: { inventoryId: inventoryItem.id, extensionArticles: [...this.extensionArticles()] } });
-    } else if (this.currentArticleId.orderId && this.currentArticleId.articleId) {
-      this.router.navigate(['/orders'])
     } else {
       this.router.navigate(['/inventory/', inventoryItem.id]);
     }
