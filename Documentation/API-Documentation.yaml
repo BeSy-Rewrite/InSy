@@ -1844,6 +1844,7 @@ components:
           type: string
           example: "Tech GmbH"
         cost_center:
+          description: "Alias, deprecated: cost_center_name"
           type: string
           example: "IT-Abteilung"
         user_name:
@@ -1861,7 +1862,7 @@ components:
         - order_id
         - order_created_date
         - supplier_name
-        - cost_center_name
+        - cost_center
         - user_name
         - order_quote_price
         - items
