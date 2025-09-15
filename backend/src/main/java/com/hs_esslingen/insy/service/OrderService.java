@@ -1,6 +1,7 @@
 package com.hs_esslingen.insy.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
+    private static final String NOT_FOUND_MESSAGE = "Order with id %d not found.";
 
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
@@ -53,7 +55,7 @@ public class OrderService {
      * Marks an order as processed by setting its deletedAt timestamp.
      * This method marks the order as deleted without actually removing it from the
      * database.
-     * 
+     *
      * @param id the ID of the order to delete
      * @return a ResponseEntity indicating the result of the deletion
      */
@@ -65,7 +67,7 @@ public class OrderService {
             orderRepository.save(order.get());
             return ResponseEntity.noContent().build();
         } else {
-            throw new NotFoundException("Order with id " + id + " not found.");
+            throw new NotFoundException(String.format(NOT_FOUND_MESSAGE, id));
         }
     }
 
@@ -77,12 +79,15 @@ public class OrderService {
      * @param dtos an array of MockBesyOrderDTO objects containing order details
      * @return a ResponseEntity indicating the result of the creation
      */
-    public ResponseEntity<Void> createOrder(OrderCreateDTO[] dtos) {
+    public ResponseEntity<List<OrderResponseDTO>> createOrder(OrderCreateDTO[] dtos) {
 
         if (dtos != null) {
+            List<Order> createdOrders = new ArrayList<>();
             for (OrderCreateDTO dto : dtos) {
-                Order existingOrder = orderRepository.findByBesyId(dto.getOrderId()).orElse(null);
-                if (existingOrder != null && existingOrder.getDeletedAt() == null) {
+                if (orderRepository.findByBesyId(dto.getOrderId())
+                        .stream()
+                        .anyMatch(order -> order.getDeletedAt() == null)) {
+                    logger.info("Order with besyId {} already exists. Skipping creation.", dto.getOrderId());
                     continue;
                 }
 
@@ -106,9 +111,12 @@ public class OrderService {
                     order.addArticle(article);
                 }
 
-                orderRepository.save(order);
+                createdOrders.add(orderRepository.save(order));
             }
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(createdOrders.stream()
+                    .map(orderMapper::toDto)
+                    .toList());
+
         }
         return ResponseEntity.badRequest().build();
     }
@@ -126,7 +134,7 @@ public class OrderService {
             OrderResponseDTO dto = orderMapper.toDto(order.get());
             return ResponseEntity.ok(dto);
         } else {
-            throw new NotFoundException("Order with id " + id + " not found.");
+            throw new NotFoundException(String.format(NOT_FOUND_MESSAGE, id));
         }
     }
 
@@ -138,7 +146,7 @@ public class OrderService {
      */
     public List<Article> getArticlesByOrder(Integer orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("Order with id " + orderId + " not found."));
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE, orderId)));
         return order.getArticles();
     }
 
