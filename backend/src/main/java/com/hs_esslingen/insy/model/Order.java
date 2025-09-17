@@ -14,6 +14,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -42,6 +44,10 @@ public class Order {
     @Column(name = "besy_id", nullable = false)
     private Integer besyId;
 
+    @ManyToOne
+    @JoinColumn(name = "cost_centers_id", nullable = true)
+    private CostCenter costCenter;
+
     @Column(name = "deleted_at")
     @Builder.Default
     private LocalDateTime deletedAt = null;
@@ -60,13 +66,14 @@ public class Order {
     // Constructor
     @Builder
     public Order(String description, BigDecimal price, String company, LocalDateTime createdAt,
-            String user, Integer besyId) {
+            String user, Integer besyId, CostCenter costCenter) {
         this.description = description;
         this.price = price;
         this.company = company;
         this.createdAt = createdAt;
         this.user = user;
         this.besyId = besyId;
+        this.costCenter = costCenter;
         this.deletedAt = null;
         this.articles = new ArrayList<>();
     }

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.javers.core.Javers;
@@ -402,10 +401,10 @@ public class InventoryService {
     private static InventoryCreateRequestDTO mapInventoryToDto(Inventory inventory) {
         InventoryCreateRequestDTO dto = new InventoryCreateRequestDTO();
         dto.setInventoriesId(inventory.getId());
-        dto.setDescription(inventory.getDescription() == null ? null : inventory.getDescription().toString());
-        dto.setSerialNumber(inventory.getSerialNumber() == null ? null : inventory.getSerialNumber().toString());
+        dto.setDescription(inventory.getDescription() == null ? null : inventory.getDescription());
+        dto.setSerialNumber(inventory.getSerialNumber() == null ? null : inventory.getSerialNumber());
         dto.setPrice(inventory.getPrice());
-        dto.setLocation(inventory.getLocation() == null ? null : inventory.getLocation().toString());
+        dto.setLocation(inventory.getLocation() == null ? null : inventory.getLocation());
         dto.setCostCenter(inventory.getCostCenter() == null ? null : inventory.getCostCenter().getDescription());
         dto.setCompany(inventory.getCompany() == null ? null : inventory.getCompany().getName());
         dto.setOrderer(inventory.getUser() == null ? null : inventory.getUser().getId());
@@ -431,7 +430,7 @@ public class InventoryService {
                 inventory.getUser() != null ? inventory.getUser().getName() : null)
                 .filter(Objects::nonNull)
                 .map(String::toLowerCase)
-                .collect(Collectors.toList());
+                .toList();
 
         // Extension fields – description + company name
         List<String> extensionFields = inventory.getExtensions().stream()
@@ -440,7 +439,7 @@ public class InventoryService {
                         ext.getCompany() != null ? ext.getCompany().getName() : null))
                 .filter(Objects::nonNull)
                 .map(String::toLowerCase)
-                .collect(Collectors.toList());
+                .toList();
 
         // Combine all separated by spaces
         List<String> allFields = new ArrayList<>();
