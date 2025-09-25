@@ -41,7 +41,7 @@ jobs:
 
       - name: Setup image name
         run: |
-          echo "IMAGE_NAME=${env.REPO_OWNER@L}/besy" >> "${GITHUB_ENV}"
+          echo "IMAGE_NAME=${REPO_OWNER@L}/besy" >> "${GITHUB_ENV}"
 
       - name: Build and push Frontend to GitHub
         uses: docker/build-push-action@v5
