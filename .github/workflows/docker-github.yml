@@ -13,8 +13,7 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository }}
+  REPO_OWNER: ${{ github.repository_owner }}
   BUILD_PROFILE: production
 
 jobs:
@@ -35,15 +34,15 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Downcase image name
-        run: |
-          echo "IMAGE_NAME=${IMAGE_NAME@L}" >> "${GITHUB_ENV}"
-
       - name: Check build profile
         if: ${{ github.ref == 'refs/heads/test'}}
         run: |
-          echo "BUILD_PROFILE=tests" >> "${GITHUB_ENV}"
-        
+          echo "BUILD_PROFILE=test" >> "${GITHUB_ENV}"
+
+      - name: Setup image name
+        run: |
+          echo "IMAGE_NAME=${REPO_OWNER@L}/insy" >> "${GITHUB_ENV}"
+
       - name: Build and push Frontend to GitHub
         uses: docker/build-push-action@v5
         with:
@@ -51,11 +50,11 @@ jobs:
           build-args: |
             PROFILE=${{ env.BUILD_PROFILE }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:frontend-${{ env.BUILD_PROFILE }}-latest
+          tags:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:${{ env.BUILD_PROFILE }}-latest
 
       - name: Build and push Backend to GitHub
         uses: docker/build-push-action@v5
         with:
           context: ./backend
           push: ${{ github.event_name != 'pull_request' }}
-          tags:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:backend-${{ env.BUILD_PROFILE }}-latest
+          tags:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-backend:${{ env.BUILD_PROFILE }}-latest
