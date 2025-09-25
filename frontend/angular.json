@@ -59,7 +59,7 @@
                 }
               ]
             },
-            "tests": {
+            "test": {
               "budgets": [
                 {
                   "type": "initial",
@@ -76,7 +76,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.tests.ts"
+                  "with": "src/environments/environment.test.ts"
                 }
               ]
             }
@@ -92,8 +92,8 @@
             "development": {
               "buildTarget": "frontend:build:development"
             },
-            "tests": {
-              "buildTarget": "frontend:build:tests"
+            "test": {
+              "buildTarget": "frontend:build:test"
             }
           },
           "defaultConfiguration": "development"
