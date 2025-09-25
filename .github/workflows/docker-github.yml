@@ -13,6 +13,7 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
+  REPO_OWNER: ${{ github.repository_owner }}
   BUILD_PROFILE: production
 
 jobs:
@@ -40,7 +41,7 @@ jobs:
 
       - name: Setup image name
         run: |
-          echo "IMAGE_NAME='${{ github.repository_owner@L }}/besy" >> "${GITHUB_ENV}"
+          echo "IMAGE_NAME=${env.REPO_OWNER@L}/besy" >> "${GITHUB_ENV}"
 
       - name: Build and push Frontend to GitHub
         uses: docker/build-push-action@v5
