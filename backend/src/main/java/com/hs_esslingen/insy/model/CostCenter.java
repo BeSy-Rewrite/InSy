@@ -1,5 +1,10 @@
 package com.hs_esslingen.insy.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,11 +16,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Data
@@ -30,7 +30,8 @@ public class CostCenter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    String description; // ToDo: Feld überhaupt nötig? Kostenstelle ist nur als Nummer in Inventarliste vorhanden, diese könnte man als Primary Key verwenden
+    String description; // ToDo: Feld überhaupt nötig? Kostenstelle ist nur als Nummer in Inventarliste
+                        // vorhanden, diese könnte man als Primary Key verwenden
 
     @Column(name = "is_archived")
     @Builder.Default

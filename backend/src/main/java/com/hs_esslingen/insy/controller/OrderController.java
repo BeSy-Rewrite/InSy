@@ -41,7 +41,7 @@ public class OrderController {
      * @return a ResponseEntity indicating the result of the creation
      */
     @PostMapping
-    public ResponseEntity<Void> createOrder(@RequestBody OrderCreateDTO[] orderRequest) {
+    public ResponseEntity<List<OrderResponseDTO>> createOrder(@RequestBody OrderCreateDTO[] orderRequest) {
         return orderService.createOrder(orderRequest);
     }
 

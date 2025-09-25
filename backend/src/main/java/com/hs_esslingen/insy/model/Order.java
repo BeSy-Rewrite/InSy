@@ -66,13 +66,14 @@ public class Order {
     // Constructor
     @Builder
     public Order(String description, BigDecimal price, String company, LocalDateTime createdAt,
-            String user, Integer besyId) {
+            String user, Integer besyId, CostCenter costCenter) {
         this.description = description;
         this.price = price;
         this.company = company;
         this.createdAt = createdAt;
         this.user = user;
         this.besyId = besyId;
+        this.costCenter = costCenter;
         this.deletedAt = null;
         this.articles = new ArrayList<>();
     }

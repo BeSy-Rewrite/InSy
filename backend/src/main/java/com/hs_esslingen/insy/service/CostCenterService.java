@@ -1,7 +1,6 @@
 package com.hs_esslingen.insy.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -54,7 +53,7 @@ public class CostCenterService {
         List<String> allDescriptions = costCenterRepository.findAll().stream()
                 .map(CostCenter::getDescription)
                 .sorted()
-                .collect(Collectors.toList());
+                .toList();
 
         return CostCenterDTO.builder()
                 .costCenters(allDescriptions)
