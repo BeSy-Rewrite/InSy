@@ -1,0 +1,45 @@
+services:
+  db:
+    container_name: insy-postgres
+    image: postgres
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    env_file:
+      - path: .env
+        required: true
+    networks:
+      - internal
+
+  backend:
+    container_name: insy-backend
+    image: "ghcr.io/kr1pt0n05/insy-backend:${CONFIG}-latest"
+    env_file:
+      - path: .env
+        required: true
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://insy-postgres:5432/${POSTGRES_DB}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.$APP_NAME.entrypoints=websecure"
+      - "traefik.http.routers.$APP_NAME.rule=Host($APP_URL)"
+      - "traefik.http.routers.$APP_NAME.tls.certresolver=letsencrypt"
+      - "traefik.http.services.$APP_NAME.loadbalancer.server.port=${PORT}"
+    networks:
+      - traefik
+      - internal
+    depends_on:
+      - db
+
+
+networks:
+  traefik:
+    external: true
+  internal:
+    external: false
