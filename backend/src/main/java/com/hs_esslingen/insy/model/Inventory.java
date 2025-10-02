@@ -77,7 +77,8 @@ public class Inventory {
     @Builder.Default
     private LocalDateTime deletedAt = null;
 
-    @OneToMany(mappedBy = "inventories", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "inventories", cascade = { CascadeType.REMOVE,
+            CascadeType.ALL }, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
