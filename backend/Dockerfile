@@ -3,7 +3,8 @@
 
 
 # Stage 1: Build
-FROM maven:3.9 AS build
+# 3.9 updated to 3.9.11 which caused build issues, now using 3.9.10
+FROM maven:3.9.10 AS build
 WORKDIR /app
 COPY pom.xml ./
 COPY src ./src
