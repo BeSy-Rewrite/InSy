@@ -84,12 +84,12 @@ export class AuthenticationService {
    *
    * @returns {boolean} - Returns true if both the ID token and access token are valid, false otherwise.
    */
-  validToken(): boolean {
+  hasValidToken(): boolean {
     return this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
   }
 
   isAuthorised(): boolean {
-    return this.validToken() && this.getRoles().includes(environment.requiredRole);
+    return this.hasValidToken() && this.getRoles().includes(environment.requiredRole);
   }
 
   /**
