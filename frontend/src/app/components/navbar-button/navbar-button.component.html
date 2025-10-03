@@ -1,0 +1,12 @@
+<a [routerLink]="routerLink()" [routerLinkActive]="'active_bg text-white'"
+  [routerLinkActiveOptions]="{ exact: isExact() }"
+  class="text-gray-400 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md font-medium text-lg"
+  [ngClass]="extraClasses()">
+
+  @if (label() === 'Bestellungen' && authService.isAuthorised()) {
+  <span [matBadge]="numberOfOpenArticles()" matBadgeOverlap="false" matBadgeColor="accent"
+    [matBadgeHidden]="numberOfOpenArticles() === 0">Bestellungen</span>
+  } @else {
+  {{ label() }}
+  }
+</a>
