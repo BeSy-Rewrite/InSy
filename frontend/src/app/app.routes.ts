@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { DetailsComponent } from './pages/details/details.component';
 import { ExtensionInventorizationComponent } from './pages/extension-inventorization/extension-inventorization.component';
+import { HomepageComponent } from './pages/homepage/homepage.component';
 import { ImportComponent } from './pages/import/import.component';
 import { InventorizationComponent } from './pages/inventorization/inventorization.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
@@ -25,8 +26,13 @@ export const routes: Routes = [
 
   },
   {
+    title: 'Space Simulator',
+    path: 'easter-egg',
+    component: HomepageComponent,
+  },
+  {
     title: 'InSy',
-    path: 'homepage',
+    path: 'home',
     component: StatisticsComponent,
     canActivate: [DefaultGuardService],
   },
