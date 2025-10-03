@@ -35,7 +35,7 @@ public class SecurityConfigDev {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.addAllowedOrigin(environment.getProperty("allowed.origin"));
+                    corsConfiguration.addAllowedOriginPattern("*");
                     corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
                     corsConfiguration.addAllowedHeader("*");
                     return corsConfiguration;

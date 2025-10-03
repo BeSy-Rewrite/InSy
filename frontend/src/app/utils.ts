@@ -22,14 +22,19 @@ export function localizePrice(price: number | string): string {
 }
 
 /**
- * Converts a localized price string (with comma as decimal separator and Euro sign)
- * back to a number.
+ * Converts a localized price string back to a numeric value.
+ * Handles both dot and comma as decimal and thousands separators.
+ * Removes any Euro symbol and whitespace.
  *
  * @param price - The localized price string (e.g., "12,34 €").
  * @returns The numeric price value.
  */
 export function unLocalizePrice(price: string): number {
-    return parseFloat(String(price).replace(',', '.').replace('€', '').trim());
+    price = price.replace('€', '').trim();
+    // Remove thousand separators (either '.' or ',') that are followed by exactly three digits
+    price = price.replace(/([.,])(?=\d{3})/g, '');
+
+    return parseFloat(String(price).replace(',', '.'));
 }
 
 /**
