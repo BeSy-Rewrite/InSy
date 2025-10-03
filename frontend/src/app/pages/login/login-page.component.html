@@ -1,4 +1,4 @@
-<body class="bg-white text-gray-800 flex flex-col min-h-screen overflow-hidden">
+<body class="bg-white text-gray-800 flex flex-col h-full overflow-hidden">
   <!-- Hero section that fills remaining space -->
   <main class="flex-grow relative flex items-center justify-center overflow-hidden">
 
@@ -16,8 +16,9 @@
         Willkommen zu INSY!
         }
       </h1>
-      <img class="object-contain max-w-3/5 mt-2 mb-4 rounded-2xl" src="images/InSy_pixel-bild.png">
-      @if (!authService.validToken()) {
+      <img class="object-contain max-w-3/5 mt-2 mb-4 rounded-2xl" src="images/InSy_pixel-bild.png"
+        alt="Pixelart eines Mitarbeiters, der an der Inventarisierung verzweifelt">
+      @if (!authService.hasValidToken()) {
       <a mat-raised-button color="primary" (click)="authService.login()">
         Login
       </a>
