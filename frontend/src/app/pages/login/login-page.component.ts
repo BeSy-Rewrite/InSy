@@ -3,14 +3,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-login-page',
   imports: [
     MatButtonModule
   ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  templateUrl: './login-page.component.html',
+  styleUrl: './login-page.component.css'
 })
-export class LoginComponent {
+export class LoginPageComponent {
   constructor(public authService: AuthenticationService) {
     this.authService = authService;
   }
