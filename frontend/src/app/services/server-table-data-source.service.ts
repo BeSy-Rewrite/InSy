@@ -1,6 +1,6 @@
 import { CollectionViewer } from '@angular/cdk/collections';
 import { DataSource } from '@angular/cdk/table';
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -10,7 +10,7 @@ import { Inventories } from '../models/inventories';
 import { InventoryItem } from '../models/inventory-item';
 import { Tag } from '../models/tag';
 import { localizePrice } from '../utils';
-import { InventoriesService } from './inventories.service';
+import { CachedInventoryService } from './cached-inventory.service';
 import { TagsService } from './tags.service';
 
 // Interface for Pagination details (pageIndex and pageSize)
@@ -95,12 +95,6 @@ export class ServerTableDataSourceService<T> extends DataSource<T> {
   private readonly _data: BehaviorSubject<any[]>;
 
   /**
-   * The service used to fetch inventory data from the backend.
-   */
-  private readonly _service: InventoriesService = inject(InventoriesService);
-
-
-  /**
    * Reference to the paginator for handling pagination.
    */
   private _paginator: MatPaginator | undefined;
@@ -125,14 +119,11 @@ export class ServerTableDataSourceService<T> extends DataSource<T> {
    */
   private readonly _queryParams: BehaviorSubject<QueryParams>;
 
-  /**
-   * Cache to track previously loaded pages and avoid redundant API calls.
-   */
-  private _pageCache: Map<Page, any> = new Map();
-
   private _tags: Tag[] = [];
 
-  constructor(private readonly tagsService: TagsService) {
+  constructor(private readonly tagsService: TagsService,
+    private readonly inventoriesService: CachedInventoryService
+  ) {
     super();
 
     // Initialize the data and query parameters
@@ -265,7 +256,7 @@ export class ServerTableDataSourceService<T> extends DataSource<T> {
 
   private fetchData(pageNumber: number, pageSize: number, sortActive: string, sortDirection: string, filter: Filter, searchText: string) {
     // Call the API to fetch the inventory data with query parameters
-    this._service.getInventories(pageNumber, pageSize, sortActive, sortDirection, filter, searchText).subscribe((inventories: Inventories) => {
+    this.inventoriesService.getInventories(pageNumber, pageSize, sortActive, sortDirection, filter, searchText).subscribe((inventories: Inventories) => {
       if (inventories.content === undefined) {
         this.data = []; //  If no content is returned, set data to an empty array
       } else {
@@ -305,6 +296,7 @@ export class ServerTableDataSourceService<T> extends DataSource<T> {
   // This method is used by MatTable to disconnect from the data source
   // This needs to stay EMPTY, otherwise Mat-Table wont render anything when re-entering Inventory Page!
   disconnect(collectionViewer: CollectionViewer): void {
+    console.log("Disconnecting data source");
   }
 
   getSearchText(): string {
