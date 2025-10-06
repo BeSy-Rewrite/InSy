@@ -7,7 +7,6 @@ import { InventoryComponent } from './pages/inventory/inventory.component';
 import { LoginPageComponent } from './pages/login/login-page.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { OrdersComponent } from './pages/orders/orders.component';
-import { ReallyTheHomepageComponent } from './pages/really-the-homepage/really-the-homepage.component';
 import { StatisticsComponent } from './pages/statistics/statistics.component';
 import { UnauthorisedComponent } from './pages/unauthorised/unauthorised.component';
 import { InventoryItemChangesResolver } from './resolver/changes.resolver';
@@ -25,13 +24,8 @@ export const routes: Routes = [
     component: LoginPageComponent,
   },
   {
-    title: 'Space Simulator',
-    path: 'really-the-homepage',
-    component: ReallyTheHomepageComponent,
-  },
-  {
     title: 'InSy',
-    path: 'home',
+    path: 'homepage',
     component: StatisticsComponent,
     canActivate: [DefaultGuardService],
   },
