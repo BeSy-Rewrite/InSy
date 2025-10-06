@@ -17,17 +17,17 @@ import { ChipV2Component } from '../../components/chip-v2/chip-v2.component';
 import { DatepickerComponent } from '../../components/datepicker/datepicker.component';
 import { InventoryListComponent } from '../../components/inventory-list/inventory-list.component';
 import { RangeSliderComponent } from '../../components/range-slider/range-slider.component';
-import { CacheInventoryService } from '../../services/cache-inventory.service';
+import { CachedDataService } from '../../services/cached-data.service';
 import { ServerTableDataSourceService } from '../../services/server-table-data-source.service';
 
 
 
-export interface minAndMaxId {
+export interface MinAndMaxId {
   maxId: number,
   minId: number,
 }
 
-export interface minAndMaxPrice {
+export interface MinAndMaxPrice {
   maxPrice: number,
   minPrice: number,
 }
@@ -95,7 +95,7 @@ export class InventoryComponent implements OnInit {
    * The cache service that retrieves cached inventory filter options such as cost centers, companies, etc.
    * This helps in reducing redundant API calls and enhances performance.
    */
-  cache = inject(CacheInventoryService);
+  cache = inject(CachedDataService);
 
   /**
    * The Angular Router service used for navigation within the application.
@@ -127,8 +127,8 @@ export class InventoryComponent implements OnInit {
   locations: string[] = [];
   orderers: string[] = [];
   tags: string[] = [];
-  minAndMaxId: minAndMaxId = {} as minAndMaxId;
-  minAndMaxPrice: minAndMaxPrice = {} as minAndMaxPrice;
+  minAndMaxId: MinAndMaxId = {} as MinAndMaxId;
+  minAndMaxPrice: MinAndMaxPrice = {} as MinAndMaxPrice;
 
   showDeinventoried = signal<boolean>(false);
 
