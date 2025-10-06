@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import {InventoriesService} from './inventories.service';
-import {Observable, of, tap} from 'rxjs';
-import {minAndMaxId, minAndMaxPrice} from '../pages/inventory/inventory.component';
+import { Observable, of, tap } from 'rxjs';
+import { MinAndMaxId, MinAndMaxPrice } from '../pages/inventory/inventory.component';
+import { InventoriesService } from './inventories.service';
 
 
 /**
- * CacheInventoryService
+ * CachedDataService
  *
  * This service handles caching of inventory-related data (e.g., cost centers, companies, serial numbers, etc.)
  * to avoid redundant API calls. It interacts with the `InventoriesService` to fetch data, but caches the data
@@ -24,7 +24,7 @@ import {minAndMaxId, minAndMaxPrice} from '../pages/inventory/inventory.componen
 @Injectable({
   providedIn: 'root'
 })
-export class CacheInventoryService {
+export class CachedDataService {
   // Cache storage using a Map to store data keyed by identifiers.
   private readonly cache = new Map<string, any>();
 
@@ -133,9 +133,9 @@ export class CacheInventoryService {
   }
 
 
-  getMinAndMaxId(): Observable<minAndMaxId> {
+  getMinAndMaxId(): Observable<MinAndMaxId> {
     if (this.cache.has('minAndMaxIds')) {
-      return of(this.cache.get('minAndMaxIds') as minAndMaxId);
+      return of(this.cache.get('minAndMaxIds') as MinAndMaxId);
     } else {
       return this.inventoriesService.getMinAndMaxId().pipe(
         tap(data => this.cache.set('minAndMaxIds', data))
@@ -143,10 +143,10 @@ export class CacheInventoryService {
     }
   }
 
-  getMinAndMaxPrice(): Observable<minAndMaxPrice> {
+  getMinAndMaxPrice(): Observable<MinAndMaxPrice> {
     if (this.cache.has('minAndMaxPrice')) {
-      return of(this.cache.get('minAndMaxPrice') as minAndMaxPrice);
-    }else {
+      return of(this.cache.get('minAndMaxPrice') as MinAndMaxPrice);
+    } else {
       return this.inventoriesService.getMinAndMaxPrice().pipe(
         tap(data => this.cache.set('minAndMaxPrice', data))
       )
