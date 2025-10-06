@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
 import { DetailsComponent } from './pages/details/details.component';
 import { ExtensionInventorizationComponent } from './pages/extension-inventorization/extension-inventorization.component';
-import { HomepageComponent } from './pages/homepage/homepage.component';
 import { ImportComponent } from './pages/import/import.component';
 import { InventorizationComponent } from './pages/inventorization/inventorization.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
 import { LoginPageComponent } from './pages/login/login-page.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { OrdersComponent } from './pages/orders/orders.component';
+import { ReallyTheHomepageComponent } from './pages/really-the-homepage/really-the-homepage.component';
 import { StatisticsComponent } from './pages/statistics/statistics.component';
 import { UnauthorisedComponent } from './pages/unauthorised/unauthorised.component';
 import { InventoryItemChangesResolver } from './resolver/changes.resolver';
@@ -26,8 +26,8 @@ export const routes: Routes = [
   },
   {
     title: 'Space Simulator',
-    path: 'easter-egg',
-    component: HomepageComponent,
+    path: 'really-the-homepage',
+    component: ReallyTheHomepageComponent,
   },
   {
     title: 'InSy',
