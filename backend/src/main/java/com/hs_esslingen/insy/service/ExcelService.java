@@ -121,10 +121,89 @@ public class ExcelService {
 
         // Build the .xlsx file
         Workbook wb = new HSSFWorkbook();
-        Sheet sheet = wb.createSheet("Inventar");
 
         // Fetch all the necessary data
         List<Inventory> inventoryList = inventoryRepository.findAll(spec, Sort.by(Sort.Direction.ASC, "id"));
+
+        Map<Integer, List<Inventory>> inventoriesByYear = inventoryList.stream()
+                .collect(Collectors.groupingBy(inv -> inv.getCreatedAt().getYear()));
+
+        // Deinventoried font style
+        CellStyle deinventoriedStyle = wb.createCellStyle();
+        Font deinventoriedFont = wb.createFont();
+        deinventoriedFont.setColor(IndexedColors.RED.getIndex());
+        deinventoriedFont.setStrikeout(true);
+        deinventoriedStyle.setFont(deinventoriedFont);
+
+        // Date cell style
+        CellStyle dateCellStyle = wb.createCellStyle();
+        dateCellStyle.setDataFormat(wb.getCreationHelper().createDataFormat().getFormat("dd.MM.yyyy"));
+
+        for (Map.Entry<Integer, List<Inventory>> entry : inventoriesByYear.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .toList()) {
+            Sheet sheet = createSheet(wb, entry.getKey());
+            // Insert comments
+            for (int i = 0; i < entry.getValue().size(); i++) {
+                Row row = sheet.createRow(i + 1 + STARTING_ROW_OFFSET); // 1 offset for headings, STARTING_ROW_OFFSET
+                                                                        // for
+                                                                        // compatability with old excel
+                Inventory inventory = entry.getValue().get(i);
+                List<Comment> comments = inventory.getComments();
+
+                row.createCell(0)
+                        .setCellValue(
+                                inventory.getCostCenter() == null ? "" : inventory.getCostCenter().getDescription());
+                row.createCell(1).setCellValue(inventory.getId());
+                row.createCell(2).setCellValue(1);
+                row.createCell(3).setCellValue(inventory.getDescription());
+                row.createCell(4).setCellValue(inventory.getCompany() == null ? "" : inventory.getCompany().getName());
+                row.createCell(5).setCellValue(inventory.getPrice().doubleValue());
+
+                Cell date = row.createCell(6);
+                date.setCellStyle(dateCellStyle);
+                date.setCellValue(Date.from(inventory.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant())); // Convert
+                                                                                                                   // LocalDateTime
+                                                                                                                   // to
+                                                                                                                   // a
+                                                                                                                   // Date
+                                                                                                                   // to
+                                                                                                                   // properly
+                                                                                                                   // save
+                                                                                                                   // it
+                                                                                                                   // as
+                                                                                                                   // date
+                                                                                                                   // to
+                                                                                                                   // excel
+
+                row.createCell(7).setCellValue(inventory.getSerialNumber());
+                row.createCell(8).setCellValue(inventory.getLocation());
+                row.createCell(9).setCellValue(inventory.getUser() == null ? "" : inventory.getUser().getName());
+
+                IntStream.range(10, 10 + comments.size())
+                        .forEach(j -> row.createCell(j).setCellValue(comments.get(j - 10).getDescription()));
+
+                if (inventory.getIsDeinventoried()) {
+                    for (int j = 0; j < 10; j++) {
+                        row.getCell(j).setCellStyle(deinventoriedStyle);
+                    }
+                }
+            }
+        }
+
+        // Write it to a byte array
+        // Return it
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        wb.write(outputStream);
+        Resource resource = new ByteArrayResource(outputStream.toByteArray());
+        wb.close();
+        return ResponseEntity.ok()
+                .header("content-disposition", "attachment; filename=export.xls")
+                .body(resource);
+    }
+
+    private Sheet createSheet(Workbook wb, Integer year) {
+        Sheet sheet = wb.createSheet(year.toString());
 
         // First row font cell style
         String[] headings = {
@@ -157,69 +236,7 @@ public class ExcelService {
             cell.setCellValue(headings[i]);
             cell.setCellStyle(rowHeadingStyle);
         }
-
-        // Deinventoried font style
-        CellStyle deinventoriedStyle = wb.createCellStyle();
-        Font deinventoriedFont = wb.createFont();
-        deinventoriedFont.setColor(IndexedColors.RED.getIndex());
-        deinventoriedFont.setStrikeout(true);
-        deinventoriedStyle.setFont(deinventoriedFont);
-
-        // Date cell style
-        CellStyle dateCellStyle = wb.createCellStyle();
-        dateCellStyle.setDataFormat(wb.getCreationHelper().createDataFormat().getFormat("dd.MM.yyyy"));
-
-        // Insert comments
-        for (int i = 0; i < inventoryList.size(); i++) {
-            Row row = sheet.createRow(i + 1 + STARTING_ROW_OFFSET); // 1 offset for headings, STARTING_ROW_OFFSET for
-                                                                    // compatability with old excel
-            Inventory inventory = inventoryList.get(i);
-            List<Comment> comments = inventory.getComments();
-
-            row.createCell(0)
-                    .setCellValue(inventory.getCostCenter() == null ? "" : inventory.getCostCenter().getDescription());
-            row.createCell(1).setCellValue(inventory.getId());
-            row.createCell(2).setCellValue(1);
-            row.createCell(3).setCellValue(inventory.getDescription());
-            row.createCell(4).setCellValue(inventory.getCompany() == null ? "" : inventory.getCompany().getName());
-            row.createCell(5).setCellValue(inventory.getPrice().doubleValue());
-
-            Cell date = row.createCell(6);
-            date.setCellStyle(dateCellStyle);
-            date.setCellValue(Date.from(inventory.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant())); // Convert
-                                                                                                               // LocalDateTime
-                                                                                                               // to a
-                                                                                                               // Date
-                                                                                                               // to
-                                                                                                               // properly
-                                                                                                               // save
-                                                                                                               // it as
-                                                                                                               // date
-                                                                                                               // to
-                                                                                                               // excel
-
-            row.createCell(7).setCellValue(inventory.getSerialNumber());
-            row.createCell(8).setCellValue(inventory.getLocation());
-            row.createCell(9).setCellValue(inventory.getUser() == null ? "" : inventory.getUser().getName());
-
-            IntStream.range(10, 10 + comments.size())
-                    .forEach(j -> row.createCell(j).setCellValue(comments.get(j - 10).getDescription()));
-
-            if (inventory.getIsDeinventoried()) {
-                for (int j = 0; j < 10; j++) {
-                    row.getCell(j).setCellStyle(deinventoriedStyle);
-                }
-            }
-        }
-
-        // Write it to a byte array
-        // Return it
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        wb.write(outputStream);
-        Resource resource = new ByteArrayResource(outputStream.toByteArray());
-        return ResponseEntity.ok()
-                .header("content-disposition", "attachment; filename=export.xls")
-                .body(resource);
+        return sheet;
     }
 
     /**
@@ -358,8 +375,7 @@ public class ExcelService {
         // Remove the already existing costCenters from the excel's costCenters
         excelCostCenters.removeAll(existingCostCenters.stream().map(CostCenter::getDescription).toList());
         // Persist the now remaining excel sheets costCenters (all costCenters that are
-        // new and do not already exist in the DB)
-        // to the database;
+        // new and do not already exist in the DB) to the database;
         List<CostCenter> costCenters = costCentersRepository
                 .saveAll(excelCostCenters.stream().map(CostCenter::new).toList());
         // finally merge the excel sheet costCenters (that were just persisted) and the
@@ -527,9 +543,7 @@ public class ExcelService {
             return false;
         try {
             Integer.parseInt(sheetname);
-            if (Integer.parseInt(sheetname) < yearX || Integer.parseInt(sheetname) > yearY)
-                return false;
-            return true;
+            return !(Integer.parseInt(sheetname) < yearX || Integer.parseInt(sheetname) > yearY);
         } catch (NumberFormatException e) {
             return false;
         }
