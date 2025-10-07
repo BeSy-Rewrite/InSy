@@ -25,7 +25,7 @@ export const routes: Routes = [
   },
   {
     title: 'InSy',
-    path: 'homepage',
+    path: 'home',
     component: StatisticsComponent,
     canActivate: [DefaultGuardService],
   },
