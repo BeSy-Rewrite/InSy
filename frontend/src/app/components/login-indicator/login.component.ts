@@ -14,6 +14,8 @@ import { AuthenticationService } from '../../services/authentication.service';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
+  clicks = 0;
+
   constructor(readonly authService: AuthenticationService, private readonly router: Router) { }
 
   /**
@@ -39,6 +41,15 @@ export class LoginComponent {
    */
   getUserInitials(): string {
     return this.authService.getUsername()?.match(/\b(\w)/g)?.join('').toUpperCase() ?? '?';
+  }
+
+  onClick() {
+    this.clicks++;
+    if (this.clicks >= 10) {
+      this.router.navigate(['/really-the-homepage']);
+      this.clicks = 0;
+    }
+
   }
 
 }
