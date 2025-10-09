@@ -17,7 +17,7 @@ import { NavbarButtonComponent } from '../navbar-button/navbar-button.component'
     NavbarButtonComponent
   ],
   templateUrl: './homebar.component.html',
-  styleUrls: ['./homebar.component.scss'],
+  styleUrls: ['./homebar.component.css'],
 })
 export class HomebarComponent {
   isMobileMenuOpen = signal(false);

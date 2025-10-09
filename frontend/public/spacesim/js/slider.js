@@ -1,8 +1,8 @@
-import { getDistance } from "./utils.mjs";
+import { getDistance } from "./utils.js";
 
 export class Slider {
     constructor(x, y, color = "#000", width = 10, height = 500) {
-        this.radius = width/2;
+        this.radius = width / 2;
         this.linewidth = 5;
         this.height = height;
 
@@ -11,22 +11,22 @@ export class Slider {
         this.fingerId = undefined;
         this.color = color;
         this.x = x;
-        this.y = y - this.height/2;
+        this.y = y - this.height / 2;
     }
 
     setPosition(x, y) {
         this.x = x;
-        this.y = y - this.height/2;
+        this.y = y - this.height / 2;
     }
 
     setHeight(height) {
-        this.y = this.y + this.height/2;
+        this.y = this.y + this.height / 2;
         this.height = height;
-        this.y = this.y - this.height/2;
+        this.y = this.y - this.height / 2;
     }
 
     onTouchStart(id, tx, ty) {
-        if (getDistance(this.x, this.y + this.height/2 - this.position, tx, ty) < this.radius * 2) {
+        if (getDistance(this.x, this.y + this.height / 2 - this.position, tx, ty) < this.radius * 2) {
             this.fingerId = id;
             return true;
         } else return false;
@@ -34,7 +34,7 @@ export class Slider {
 
     onTouchMove(id, tx, ty) {
         if (this.fingerId === id) {
-            this.position = this.y + this.height/2 - ty;
+            this.position = this.y + this.height / 2 - ty;
             if (this.position < 0) {
                 this.position = 0;
             } else if (this.position > this.height) {
@@ -52,14 +52,14 @@ export class Slider {
     draw(ctx) {
         ctx.save();
         ctx.fillStyle = "#666";
-        ctx.fillRect(this.x - this.linewidth/2, this.y - this.height/2, this.linewidth, this.height); // line
+        ctx.fillRect(this.x - this.linewidth / 2, this.y - this.height / 2, this.linewidth, this.height); // line
 
         ctx.fillStyle = this.color;
         ctx.beginPath()
-        ctx.arc(this.x, this.y + this.height/2 - this.position, this.radius + this.linewidth/2, 0, Math.PI * 2, false); // slider
-        ctx.arc(this.x, this.y + this.height/2 - this.position, this.radius, 0, Math.PI * 2, true); // slider
+        ctx.arc(this.x, this.y + this.height / 2 - this.position, this.radius + this.linewidth / 2, 0, Math.PI * 2, false); // slider
+        ctx.arc(this.x, this.y + this.height / 2 - this.position, this.radius, 0, Math.PI * 2, true); // slider
         ctx.fill();
-        ctx.fillRect(this.x - this.radius, this.y + (this.height - this.linewidth/2)/2 - this.position, this.radius * 2, this.linewidth/2); // slider
+        ctx.fillRect(this.x - this.radius, this.y + (this.height - this.linewidth / 2) / 2 - this.position, this.radius * 2, this.linewidth / 2); // slider
 
         ctx.restore();
     }

@@ -1,15 +1,15 @@
-import { Button } from "./js/button.mjs";
-import { CelestialBody } from "./js/celestialBody.mjs";
-import { Craft } from "./js/craft.mjs";
-import { DataScreen } from "./js/dataScreen.mjs";
-import { setupEventListeners } from "./js/eventListeners.mjs";
-import { Joystick } from "./js/joystick.mjs";
-import { MovementController } from "./js/movementController.mjs";
-import { Renderer } from "./js/renderer.mjs";
-import { Slider } from "./js/slider.mjs";
-import { StatisticsScreen } from "./js/statisticsScreen.mjs";
-import { Time } from "./js/time.mjs";
-import { loadImage } from "./js/utils.mjs";
+import { Button } from "./js/button.js";
+import { CelestialBody } from "./js/celestialBody.js";
+import { Craft } from "./js/craft.js";
+import { DataScreen } from "./js/dataScreen.js";
+import { setupEventListeners } from "./js/eventListeners.js";
+import { Joystick } from "./js/joystick.js";
+import { MovementController } from "./js/movementController.js";
+import { Renderer } from "./js/renderer.js";
+import { Slider } from "./js/slider.js";
+import { StatisticsScreen } from "./js/statisticsScreen.js";
+import { Time } from "./js/time.js";
+import { loadImage } from "./js/utils.js";
 
 /**
  * Initializes the spaceflight simulator application.

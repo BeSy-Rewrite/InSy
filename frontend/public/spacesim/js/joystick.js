@@ -1,4 +1,4 @@
-import { getDistance, circle, createFinger } from "./utils.mjs";
+import { circle, createFinger, getDistance } from "./utils.js";
 
 export class Joystick {
     /**
