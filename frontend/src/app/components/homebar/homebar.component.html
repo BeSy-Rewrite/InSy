@@ -5,7 +5,7 @@
     <img class="h-11" src="favicon.png" alt="Logo des InventarisierungsSystems">
   </a>
 
-  <div class="-m-4 lg:hidden flex flex-row items-center align-baseline">
+  <div class="-m-4 xl:hidden flex flex-row items-center align-baseline">
     <button mat-icon-button class="!mb-1" [matMenuTriggerFor]="menu">
       <mat-icon class="!text-he-grey">menu</mat-icon>
     </button>
@@ -24,7 +24,7 @@
     }
   </mat-menu>
 
-  <nav class="hidden lg:flex gap-4">
+  <nav class="hidden xl:flex gap-4">
     @for (link of links; track $index) {
     <app-navbar-button label="{{ link.name }}" routerLink="{{ link.path }}"
       [isExact]="link.path === '/'"></app-navbar-button>
