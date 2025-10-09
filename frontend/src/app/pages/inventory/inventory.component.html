@@ -1,6 +1,10 @@
 <button mat-mini-fab color="primary" class="!fixed top-22.5 left-2.5 z-10"
   (click)="isFiltersVisible.set(!isFiltersVisible())">
+  @if (isFiltersVisible()) {
+  <mat-icon>close</mat-icon>
+  } @else {
   <mat-icon>filter_list</mat-icon>
+  }
 </button>
 
 
