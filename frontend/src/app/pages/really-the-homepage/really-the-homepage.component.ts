@@ -6,7 +6,6 @@ import { AfterViewInit, Component, ElementRef, viewChild } from '@angular/core';
   styleUrl: './really-the-homepage.component.css'
 })
 export class ReallyTheHomepageComponent implements AfterViewInit {
-  // @ViewChild('iframe') iframe!: ElementRef<HTMLIFrameElement>;
   iframe = viewChild.required<ElementRef<HTMLIFrameElement>>('iframe');
 
   ngAfterViewInit() {
