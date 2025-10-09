@@ -4,7 +4,7 @@ import { ExtensionInventorizationComponent } from './pages/extension-inventoriza
 import { ImportComponent } from './pages/import/import.component';
 import { InventorizationComponent } from './pages/inventorization/inventorization.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
-import { LoginComponent } from './pages/login/login.component';
+import { LoginPageComponent } from './pages/login/login-page.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { OrdersComponent } from './pages/orders/orders.component';
 import { StatisticsComponent } from './pages/statistics/statistics.component';
@@ -21,12 +21,11 @@ export const routes: Routes = [
   {
     title: 'Login',
     path: '',
-    component: LoginComponent,
-
+    component: LoginPageComponent,
   },
   {
     title: 'InSy',
-    path: 'homepage',
+    path: 'home',
     component: StatisticsComponent,
     canActivate: [DefaultGuardService],
   },
@@ -56,7 +55,7 @@ export const routes: Routes = [
   },
   {
     title: 'Erweiterung bearbeiten',
-    path: 'edit/:inventoryId/extension/:extensionId',
+    path: 'inventory/:inventoryId/extension/:extensionId/edit',
     component: ExtensionInventorizationComponent,
     canActivate: [DefaultGuardService],
     resolve: {
@@ -66,7 +65,7 @@ export const routes: Routes = [
   },
   {
     title: 'Inventarisierung bearbeiten',
-    path: 'edit/:id',
+    path: 'inventory/:id/edit',
     component: InventorizationComponent,
     canActivate: [DefaultGuardService],
     resolve: {

@@ -150,7 +150,7 @@ export class DetailsComponent {
 
   onClickExtension(extension: object): void {
     const ext = extension as Extension;
-    this.router.navigate(['/edit', this.inventoryItem().id, 'extension', ext.id]);
+    this.router.navigate(['/inventory', this.inventoryItem().id, 'extension', ext.id, 'edit']);
   }
 
   addExtension(): void {
@@ -167,7 +167,9 @@ export class DetailsComponent {
     if (this.extensions().length === 0) {
       return 0;
     }
-    const sum = this.extensions().reduce((acc, ext) => acc + (unLocalizePrice(ext.price) ?? 0), 0);
+    const sum = this.extensions().reduce((acc, ext) => {
+      return acc + (unLocalizePrice(ext.price) ?? 0);
+    }, 0);
     return sum;
   }
 
@@ -177,17 +179,18 @@ export class DetailsComponent {
     if (panelId === 'changes') {
       this.numberOfPanelChanges++;
       switch (this.numberOfPanelChanges) {
-        case 40:
+        case 10:
           document.body.style.backgroundColor = 'fuchsia';
           break;
-        case 45:
+        case 15:
           document.body.style.backgroundColor = 'lime';
           break;
-        case 50:
+        case 20:
           document.body.style.backgroundColor = 'yellow';
           break;
-        case 60:
-          window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ?autoplay=1';
+        case 30:
+          document.body.style.backgroundColor = 'white';
+          this.router.navigate(['/easter-egg']);
           break;
       }
     }

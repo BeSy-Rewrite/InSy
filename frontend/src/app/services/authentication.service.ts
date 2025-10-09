@@ -37,6 +37,7 @@ export class AuthenticationService {
     private readonly orderService: OrderService) {
     // Configure the OAuth2 service with the settings from the configuration file.
     this.oauthService.configure(authCodeFlowConfig);
+    this.oauthService.clearHashAfterLogin = true;
 
     // Initialize authentication flow outside of constructor.
     this.initializeAuthentication();
@@ -84,12 +85,12 @@ export class AuthenticationService {
    *
    * @returns {boolean} - Returns true if both the ID token and access token are valid, false otherwise.
    */
-  validToken(): boolean {
+  hasValidToken(): boolean {
     return this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
   }
 
   isAuthorised(): boolean {
-    return this.validToken() && this.getRoles().includes(environment.requiredRole);
+    return this.hasValidToken() && this.getRoles().includes(environment.requiredRole);
   }
 
   /**
