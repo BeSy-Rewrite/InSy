@@ -8,3 +8,7 @@
   --color-he-lightblue: #00AADC;
   --color-he-grey: #F0F0F0;
 }
+
+.mdc-fab {
+  z-index: 2000;
+}

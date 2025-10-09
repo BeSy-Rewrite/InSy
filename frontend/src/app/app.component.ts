@@ -1,3 +1,4 @@
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Component } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,6 +14,7 @@ import { HomebarComponent } from "./components/homebar/homebar.component";
     MatButtonModule,
     MatBadgeModule,
     MatTooltipModule,
+    ScrollingModule,
     HomebarComponent
   ],
   templateUrl: './app.component.html',
