@@ -1,4 +1,4 @@
-import { getDistance } from "./utils.mjs";
+import { getDistance } from "./utils.js";
 
 const G = 6.67430e-11; // Gravitational constant in m^3 kg^-1 s^-2
 

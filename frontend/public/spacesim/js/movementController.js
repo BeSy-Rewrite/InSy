@@ -1,4 +1,4 @@
-import { createFinger } from "./utils.mjs";
+import { createFinger } from "./utils.js";
 
 export class MovementController {
     /**

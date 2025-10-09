@@ -1,4 +1,4 @@
-import { getDistance } from "./utils.mjs";
+import { getDistance } from "./utils.js";
 
 export class Craft {
     /**
