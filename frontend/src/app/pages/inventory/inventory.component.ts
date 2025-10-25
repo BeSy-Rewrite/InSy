@@ -2,30 +2,32 @@ import {
   Component, inject, OnInit,
   QueryList,
   signal,
-  ViewChildren,
+  viewChild,
+  ViewChildren
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDividerModule } from "@angular/material/divider";
+import { MatAccordion, MatExpansionModule } from "@angular/material/expansion";
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { AccordionComponent } from '../../components/accordion/accordion.component';
 import { CardComponent } from '../../components/card/card.component';
 import { ChipV2Component } from '../../components/chip-v2/chip-v2.component';
 import { DatepickerComponent } from '../../components/datepicker/datepicker.component';
 import { InventoryListComponent } from '../../components/inventory-list/inventory-list.component';
 import { RangeSliderComponent } from '../../components/range-slider/range-slider.component';
-import { CacheInventoryService } from '../../services/cache-inventory.service';
+import { CachedDataService } from '../../services/cached-data.service';
 import { ServerTableDataSourceService } from '../../services/server-table-data-source.service';
 
 
 
-export interface minAndMaxId {
+export interface MinAndMaxId {
   maxId: number,
   minId: number,
 }
 
-export interface minAndMaxPrice {
+export interface MinAndMaxPrice {
   maxPrice: number,
   minPrice: number,
 }
@@ -71,11 +73,12 @@ export interface minAndMaxPrice {
     RangeSliderComponent,
     DatepickerComponent,
     InventoryListComponent,
-    AccordionComponent,
     MatButtonModule,
     ChipV2Component,
     MatCheckboxModule,
-    MatIconModule
+    MatIconModule,
+    MatDividerModule,
+    MatExpansionModule
   ],
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.css'
@@ -92,7 +95,7 @@ export class InventoryComponent implements OnInit {
    * The cache service that retrieves cached inventory filter options such as cost centers, companies, etc.
    * This helps in reducing redundant API calls and enhances performance.
    */
-  cache = inject(CacheInventoryService);
+  cache = inject(CachedDataService);
 
   /**
    * The Angular Router service used for navigation within the application.
@@ -101,10 +104,10 @@ export class InventoryComponent implements OnInit {
   router = inject(Router);
 
   /**
-   * A reference to the accordion components within the view.
-   * This allows programmatic control to open or close all accordion sections.
+   * A reference to the MatAccordion component in the template.
+   * This allows programmatic control over the accordion, such as opening or closing all sections.
    */
-  @ViewChildren(AccordionComponent) accordions!: QueryList<AccordionComponent>;
+  accordion = viewChild.required(MatAccordion);
 
   @ViewChildren(RangeSliderComponent) rangeSliders!: QueryList<RangeSliderComponent>;
 
@@ -124,8 +127,8 @@ export class InventoryComponent implements OnInit {
   locations: string[] = [];
   orderers: string[] = [];
   tags: string[] = [];
-  minAndMaxId: minAndMaxId = {} as minAndMaxId;
-  minAndMaxPrice: minAndMaxPrice = {} as minAndMaxPrice;
+  minAndMaxId: MinAndMaxId = {} as MinAndMaxId;
+  minAndMaxPrice: MinAndMaxPrice = {} as MinAndMaxPrice;
 
   showDeinventoried = signal<boolean>(false);
 
@@ -165,27 +168,6 @@ export class InventoryComponent implements OnInit {
     this.cache.getTags().subscribe(tags => this.tags = tags);
     this.cache.getMinAndMaxPrice().subscribe(minAndMaxPrice => this.minAndMaxPrice = minAndMaxPrice);
     this.cache.getMinAndMaxId().subscribe(minAndMaxId => this.minAndMaxId = minAndMaxId);
-  }
-
-
-  /**
-   * Opens all sections of the accordion.
-   * This method loops through all accordion components and triggers the `openAll()` method to expand all sections.
-   */
-  openAllAccordion() {
-    this.accordions.map((accordion: AccordionComponent) => {
-      accordion.matAccordion.openAll();
-    })
-  }
-
-  /**
-   * Closes all sections of the accordion.
-   * This method loops through all accordion components and triggers the `closeAll()` method to collapse all sections.
-   */
-  closeAllAccordions() {
-    this.accordions.map((accordion: AccordionComponent) => {
-      accordion.matAccordion.closeAll();
-    })
   }
 
   navigateToDetailpageOf(id: number) {

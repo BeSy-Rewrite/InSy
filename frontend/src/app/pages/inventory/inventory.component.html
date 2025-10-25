@@ -1,107 +1,155 @@
-<div class="flex flex-wrap md:flex-nowrap justify-evenly">
-
+<button mat-mini-fab color="primary" class="!fixed top-22.5 left-2.5 z-10"
+  (click)="isFiltersVisible.set(!isFiltersVisible())">
   @if (isFiltersVisible()) {
+  <mat-icon>close</mat-icon>
+  } @else {
+  <mat-icon>filter_list</mat-icon>
+  }
+</button>
+
+
+<div class="md:flex md:flex-row relative">
+
   <!-- Filter Section START -->
-  <app-card title="Filter" class="grow min-w-96 max-w-md">
-    <button title-suffix mat-button style="color: darkgrey;" (click)="isFiltersVisible.set(false)">ausblenden</button>
-    <div card-content class="w-full">
+  <div [class.open]="isFiltersVisible()" [class.closed]="!isFiltersVisible()" class="md:w-96">
+
+    <div class="flex flex-col gap-2 w-96 min-w-96 mt-6">
+
+
       <!-- Filter Action Buttons -->
-      <div class="flex justify-between mb-4">
-        <div class="flex flex-wrap items-center gap-2">
-          <button mat-button (click)="openAllAccordion()">Alles&nbsp;ausklappen</button>
-          <button mat-button (click)="closeAllAccordions()">Alles&nbsp;einklappen</button>
+      <div class="flex flex-row justify-between">
+        <div class="flex flex-row gap-2">
+          <button mat-button (click)="accordion().openAll()">Alles&nbsp;ausklappen</button>
+          <button mat-button (click)="accordion().closeAll()">Alles&nbsp;einklappen</button>
         </div>
         <button mat-button color="warn" (click)="resetFilters()">Reset</button>
       </div>
 
-      <!-- Accordion Sections -->
-      <app-accordion title="Inventarnummer">
-        <div expansion-panel-content>
+      <mat-divider class="bg-gray-500" />
+
+      <mat-accordion multi>
+        <!-- Accordion Sections -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="font-semibold text-base">
+              Inventarnummer
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
           <app-range-slider [minValue]="minAndMaxId.minId" [maxValue]="minAndMaxId.maxId"
             [controlMin]="$any(inventoryForm).get('minId')" [controlMax]="$any(inventoryForm).get('maxId')" />
-        </div>
-      </app-accordion>
+        </mat-expansion-panel>
 
-      <app-accordion title="Zeitraum">
-        <div class="min-h-fit" expansion-panel-content>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="font-semibold text-base">
+              Zeitraum
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
           <app-datepicker class="min-h-fit" [controlMin]="$any(inventoryForm).get('createdAfter')"
             [controlMax]="$any(inventoryForm).get('createdBefore')" />
-        </div>
-      </app-accordion>
+        </mat-expansion-panel>
 
-      <app-accordion title="Firma">
-        <div expansion-panel-content>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="font-semibold text-base">
+              Firma
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
           <app-chip-v2 placeholder="Firma hinzufügen" heading="Firma" [options]="companies"
             [control]="$any(inventoryForm).get('company')" />
-        </div>
-      </app-accordion>
+        </mat-expansion-panel>
 
-      <app-accordion title="Preis">
-        <div expansion-panel-content>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="font-semibold text-base">
+              Preis
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
           <app-range-slider [minValue]="minAndMaxPrice.minPrice" [maxValue]="minAndMaxPrice.maxPrice"
             [controlMin]="$any(inventoryForm).get('minPrice')" [controlMax]="$any(inventoryForm).get('maxPrice')" />
-        </div>
-      </app-accordion>
+        </mat-expansion-panel>
 
-      <app-accordion title="Seriennummer">
-        <div expansion-panel-content>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="font-semibold text-base">
+              Seriennummer
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
           <app-chip-v2 placeholder="Seriennummer hinzufügen" heading="Seriennummer" [options]="serialNumbers"
             [control]="$any(inventoryForm).get('serialNumber')" />
-        </div>
-      </app-accordion>
+        </mat-expansion-panel>
 
-      <app-accordion title="Standort/Nutzer">
-        <div expansion-panel-content>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="font-semibold text-base">
+              Standort/Nutzer:in
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
           <app-chip-v2 placeholder="Standort oder Nutzer hinzufügen" heading="Standort/Nutzer" [options]="locations"
             [control]="$any(inventoryForm).get('location')" />
-        </div>
-      </app-accordion>
+        </mat-expansion-panel>
 
-      <app-accordion title="Bestellt von">
-        <div expansion-panel-content>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="font-semibold text-base">
+              Bestellt von
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
           <app-chip-v2 placeholder="Besteller hinzufügen" heading="Besteller" [options]="orderers"
             [control]="$any(inventoryForm).get('orderer')" />
-        </div>
-      </app-accordion>
+        </mat-expansion-panel>
 
-      <app-accordion title="Tags">
-        <div expansion-panel-content>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="font-semibold text-base">
+              Tags
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
           <app-chip-v2 placeholder="Tags hinzufügen" heading="Tags" [options]="tags"
             [control]="$any(inventoryForm).get('tags')" [useTagColors]="true" />
-        </div>
-      </app-accordion>
+        </mat-expansion-panel>
 
-      <app-accordion title="Kostenstelle">
-        <div expansion-panel-content>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="font-semibold text-base">
+              Kostenstelle
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
           <app-chip-v2 placeholder="Kostenstelle hinzufügen" heading="Kostenstellen" [options]="costCenters"
             [control]="$any(inventoryForm).get('costCenter')" />
-        </div>
-      </app-accordion>
+        </mat-expansion-panel>
 
-      <app-accordion title="Deinventarisiert">
-        <div expansion-panel-content>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="font-semibold text-base">
+              Deinventarisiert
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
           <mat-checkbox label="Deinventarisiert" (click)="checkDeinventoriedBox()"
             (keydown)="checkDeinventoriedBox($event)" [checked]="showDeinventoried()">
             Deinventarisiertes anzeigen
           </mat-checkbox>
-        </div>
-      </app-accordion>
+        </mat-expansion-panel>
+      </mat-accordion>
     </div>
-  </app-card>
+
+  </div>
   <!-- Filter Section END -->
-  } @else {
-  <button mat-icon-button class="mt-2" (click)="isFiltersVisible.set(true)">
-    <mat-icon>
-      <svg class="block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-        aria-hidden="true" data-slot="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75h16.5M3.75 9h16.5m-16.5 5.25h16.5" />
-      </svg>
-    </mat-icon>
-  </button>
-  }
+
 
   <!-- Content Section START -->
-  <app-card title="Inventargegenstände" class="w-3xl min-w-96 grow">
+  <app-card title="Inventargegenstände" class="md:-ml-96 w-full" [class.expanded]="!isFiltersVisible()"
+    [class.collapsed]="isFiltersVisible()">
     <div card-content>
       <app-inventory-list (onClickItem)="navigateToDetailpageOf($event)" />
     </div>

@@ -11,7 +11,7 @@ import { environment } from '../../../environments/environment';
 import { Extension } from '../../models/extension';
 import { InventoryItem } from '../../models/inventory-item';
 import { AuthenticationService } from '../../services/authentication.service';
-import { CacheInventoryService } from '../../services/cache-inventory.service';
+import { CachedDataService } from '../../services/cached-data.service';
 import { InventoriesService } from '../../services/inventories.service';
 import { localizePrice, unLocalizePrice } from '../../utils';
 
@@ -138,7 +138,7 @@ export class ItemEditorComponent {
   isInitialized = false;
 
   constructor(
-    private readonly cache: CacheInventoryService,
+    private readonly cache: CachedDataService,
     private readonly authService: AuthenticationService,
     private readonly inventoriesService: InventoriesService) { }
 
@@ -185,7 +185,7 @@ export class ItemEditorComponent {
    */
   private _setupFormControls() {
     this.formControls = new Map<string, FormControl>(
-      Array.from(this.itemColumns().keys()).map(key => [key as string, new FormControl('')])
+      Array.from(this.itemColumns().keys()).map(key => [key, new FormControl('')])
     );
     this.formGroup = new FormGroup(Object.fromEntries(this.formControls.entries()));
 
