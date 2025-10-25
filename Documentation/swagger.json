@@ -7,7 +7,12 @@
     },
     "servers": [
         {
-            "url": "insy.hs-esslingen.de"
+            "url": "https://api.insy.hs-esslingen.com",
+            "description": "Production server"
+        },
+        {
+            "url": "https://api.test.insy.hs-esslingen.com",
+            "description": "Staging/Development server"
         }
     ],
     "paths": {
