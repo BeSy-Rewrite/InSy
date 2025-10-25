@@ -450,27 +450,20 @@ export class InventorizationComponent {
    * @private
    */
   private _saveNewInventorization() {
-    this.inventoriesService.getInventoryById(this.editableInventoryItem().id).subscribe({
-      next: () => {
-        this._notify('Inventargegenstand existiert bereits, ein neuer kann nicht erstellt werden.', 'error');
-      },
-      error: () => {
-        forkJoin([this.inventoriesService.addInventoryItem(this.editableInventoryItem()).pipe(
-          tap({
-            next: (newItem) => {
-              this._notify('Inventargegenstand erfolgreich erstellt', 'success');
-            },
-            error: (error) => {
-              this._notify('Fehler beim Erstellen des neuen Inventargegenstands', 'error', error);
-            }
-          })
-        ),
-        (this.currentArticleId.orderId && this.currentArticleId.articleId) ? this._updateImportedArticle() : of({} as Article)
-        ]).subscribe({
-          next: ([newItem, _]) => {
-            return this._onInventorization(newItem);
-          }
-        });
+    forkJoin([this.inventoriesService.addInventoryItem(this.editableInventoryItem()).pipe(
+      tap({
+        next: (newItem) => {
+          this._notify('Inventargegenstand erfolgreich erstellt', 'success');
+        },
+        error: (error) => {
+          this._notify('Fehler beim Erstellen des neuen Inventargegenstands', 'error', error);
+        }
+      })
+    ),
+    (this.currentArticleId.orderId && this.currentArticleId.articleId) ? this._updateImportedArticle() : of({} as Article)
+    ]).subscribe({
+      next: ([newItem, _]) => {
+        return this._onInventorization(newItem);
       }
     });
   }
@@ -661,7 +654,7 @@ export class InventorizationComponent {
     } else {
       console.log(message);
     }
-    this._snackBar.open(message, 'Close', {
+    this._snackBar.open([message, error?.error?.message].join(' '), 'Close', {
       duration: 3000,
       panelClass: [`${type}-snackbar`]
     });
