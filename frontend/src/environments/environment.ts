@@ -1,6 +1,7 @@
 export const environment = {
     // This is the environment configuration for the frontend application.
     apiUrl: 'https://api.insy.hs-esslingen.com',
+    besyUrl: 'https://besy.hs-esslingen.com',
 
     /**
      * Regular expression for validating price input formats.

@@ -23,7 +23,10 @@ public class OrderResponseDTO {
     @JsonProperty("cost_center")
     private String costCenter;
 
-    @JsonProperty("order_id")
+    @JsonProperty("order_number")
+    private String orderNumber;
+
+    @JsonProperty("besy_id")
     private Integer besyId;
 
     @JsonProperty("deleted_at")

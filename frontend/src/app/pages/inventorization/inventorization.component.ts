@@ -424,11 +424,13 @@ export class InventorizationComponent {
 
   /**
    * Handles the inventorization process for a new article.
+   * Sets the order_id of the editable inventory item.
    * If the article is already inventoried, notifies the user and does not create a new item.
    * Otherwise, proceeds to save the new inventory item.
    * @private
    */
   private _handleArticleInventorization() {
+    this.editableInventoryItem.set({ ...this.editableInventoryItem(), order_id: this.currentArticleId.orderId });
     this.orderService.getArticleById(this.currentArticleId.articleId).subscribe({
       next: (article) => {
         if (article.is_inventoried) {

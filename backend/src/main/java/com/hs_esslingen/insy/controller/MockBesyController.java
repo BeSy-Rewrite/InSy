@@ -30,9 +30,11 @@ public class MockBesyController {
                                 new ItemCreateDTO(3, "Monitor", new BigDecimal("199.99")));
 
                 List<OrderCreateDTO> orders = List.of(
-                                new OrderCreateDTO(101, LocalDateTime.now().minusDays(2), "Tech GmbH", "IT-Abteilung",
+                                new OrderCreateDTO(101, "2025-101-0", "Eine Beschreibung für die Bestellung",
+                                                LocalDateTime.now().minusDays(2), "Tech GmbH", "IT-Abteilung",
                                                 "Sandro Lappinski", new BigDecimal("1029.98"), items1),
-                                new OrderCreateDTO(102, LocalDateTime.now().minusDays(1), "Office Supplies AG",
+                                new OrderCreateDTO(102, "2025-102-0", "Eine Beschreibung für die Bestellung",
+                                                LocalDateTime.now().minusDays(1), "Office Supplies AG",
                                                 "Marketing",
                                                 "User 1", new BigDecimal("199.99"), items2));
 

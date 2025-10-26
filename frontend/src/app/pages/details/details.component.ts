@@ -4,13 +4,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { Router, RouterModule } from '@angular/router';
+import { environment } from '../../../environments/environment';
 import { DynamicListComponent } from "../../components/dynamic-list/dynamic-list.component";
 import { Change } from '../../models/change';
 import { Comment } from '../../models/comment';
 import { Extension, extensionDisplayNames, extensionLocalizePrice } from '../../models/extension';
 import { InventoryItem, inventoryItemDisplayNames } from '../../models/inventory-item';
+import { Order } from '../../models/Order';
 import { getTagColor, Tag } from '../../models/tag';
+import { OrderService } from '../../services/order.service';
 import { localizePrice, unLocalizePrice } from '../../utils';
 
 /**
@@ -51,7 +56,9 @@ import { localizePrice, unLocalizePrice } from '../../utils';
     DynamicListComponent,
     RouterModule,
     MatButtonModule,
-    CommonModule
+    CommonModule,
+    MatIconModule,
+    MatTooltipModule
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
@@ -71,6 +78,9 @@ export class DetailsComponent {
   tags: Tag[] = [];
   // The transform merges table and column names for change history entries to display them in a single column
   changes = input([], { transform: mergeChangeLocation });
+
+  besyOrderUrl: string | undefined = undefined;
+  order: Order | undefined = undefined;
 
   inventoryItemInternal!: Map<string, string>;
 
@@ -107,7 +117,7 @@ export class DetailsComponent {
     ['changes', this.changesColumns]
   ]);
 
-  constructor(private readonly router: Router) {
+  constructor(private readonly router: Router, private readonly orderService: OrderService) {
     this.extensionColumns.set('actions', '');
     afterNextRender(() => {
       for (const panel of this.panels) {
@@ -146,6 +156,17 @@ export class DetailsComponent {
         this.inventoryItemInternal.set(id, id.toLocaleUpperCase());
       }
     }
+    this.loadBesyOrderUrl();
+  }
+
+  loadBesyOrderUrl(): void {
+    if (this.inventoryItem().order_id === undefined) {
+      return;
+    }
+    this.orderService.getOrderById(this.inventoryItem().order_id!).subscribe(order => {
+      this.besyOrderUrl = `${environment.besyUrl}/orders/` + order.besy_id;
+      this.order = order;
+    });
   }
 
   onClickExtension(extension: object): void {

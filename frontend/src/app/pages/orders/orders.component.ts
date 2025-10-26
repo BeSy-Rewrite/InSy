@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { MatButton } from '@angular/material/button';
-import { MatCheckbox } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { forkJoin, Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { AccordionComponent } from '../../components/accordion/accordion.component';
 import { CardComponent } from '../../components/card/card.component';
 import { DialogData, setupDialog } from '../../components/dialog/dialog.component';
@@ -19,12 +21,12 @@ import { OrderService } from '../../services/order.service';
   imports: [
     CardComponent,
     AccordionComponent,
-    MatButton,
-    MatCheckbox,
+    MatButtonModule,
+    MatCheckboxModule,
     MatTooltipModule,
     MatExpansionModule,
     CommonModule,
-
+    MatIconModule
   ],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.css'
@@ -63,6 +65,10 @@ export class OrdersComponent implements OnInit {
 
     });
 
+  }
+
+  getBesyOrderUrl(order: Order) {
+    return `${environment.besyUrl}/orders/${order.besy_id}`;
   }
 
   // Accordion
