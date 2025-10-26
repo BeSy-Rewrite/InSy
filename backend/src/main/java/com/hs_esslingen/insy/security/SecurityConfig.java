@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -55,7 +56,7 @@ public class SecurityConfig {
                     final String requiredAuthority = environment.getProperty("required.keycloak.role", "insy");
                     authorize
                             // Allow BeSy to create orders
-                            .requestMatchers("/orders/**").hasAnyAuthority(requiredAuthority, "SYSTEM")
+                            .requestMatchers(HttpMethod.POST, "/orders/**").hasAnyAuthority(requiredAuthority, "SYSTEM")
                             .anyRequest().hasAuthority(requiredAuthority);
                 })
                 .httpBasic(Customizer.withDefaults()) // Enable HTTP Basic authentication

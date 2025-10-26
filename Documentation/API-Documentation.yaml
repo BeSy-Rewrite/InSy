@@ -2,9 +2,12 @@ openapi: 3.0.3
 info:
   title: Inventarisierungsmanagment API
   description: Übersicht über die API-Calls des Inventarisierungsmoduls und deren Responses.
-  version: 1.1.0
+  version: 1.2.0
 servers:
   - url: insy.hs-esslingen.de
+    description: Production server
+  - url: test.insy.hs-esslingen.de
+    description: Staging and development server
 paths:
   /inventories:
     get:
@@ -1833,9 +1836,16 @@ components:
     OrderCreateDTO:
       type: object
       properties:
-        order_id:
+        besy_id:
+          description: "Alias, deprecated: order_id"
           type: integer
           example: 1001
+        order_number:
+          type: string
+          example: "40023it-25-304"
+        description:
+          type: string
+          example: "This is an example order."
         order_created_date:
           type: string
           format: date-time
@@ -1859,7 +1869,7 @@ components:
           items:
             $ref: "#/components/schemas/ItemCreateDTO"
       required:
-        - order_id
+        - besy_id
         - order_created_date
         - supplier_name
         - cost_center
