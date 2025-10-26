@@ -46,4 +46,7 @@ public class InventoriesResponseDTO {
     private LocalDateTime createdAt;
 
     private List<TagDTO> tags;
+
+    @JsonProperty("order_id")
+    private Integer orderId;
 }

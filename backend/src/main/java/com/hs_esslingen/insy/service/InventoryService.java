@@ -33,9 +33,11 @@ import com.hs_esslingen.insy.model.Company;
 import com.hs_esslingen.insy.model.CostCenter;
 import com.hs_esslingen.insy.model.History;
 import com.hs_esslingen.insy.model.Inventory;
+import com.hs_esslingen.insy.model.Order;
 import com.hs_esslingen.insy.model.User;
 import com.hs_esslingen.insy.repository.HistoryRepository;
 import com.hs_esslingen.insy.repository.InventoryRepository;
+import com.hs_esslingen.insy.repository.OrderRepository;
 import com.hs_esslingen.insy.utils.OrderByUtils;
 import com.hs_esslingen.insy.utils.RelationUtils;
 import com.hs_esslingen.insy.utils.StringParser;
@@ -47,12 +49,13 @@ import lombok.RequiredArgsConstructor;
 public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
+    private final HistoryRepository historyRepository;
+    private final OrderRepository orderRepository;
+    private final InventoryMapper inventoriesMapper;
     private final CompanyService companyService;
     private final TagService tagService;
-    private final InventoryMapper inventoriesMapper;
     private final UserService userService;
     private final CostCenterService costCenterService;
-    private final HistoryRepository historyRepository;
     private final Javers javers;
 
     /**
@@ -225,6 +228,12 @@ public class InventoryService {
         inventory.setSerialNumber(dto.getSerialNumber());
         inventory.setLocation(dto.getLocation());
         inventory.setUser(user);
+
+        if (dto.getOrderId() != null) {
+            Order order = orderRepository.findById(dto.getOrderId())
+                    .orElseThrow(() -> new BadRequestException("No order found with id " + dto.getOrderId()));
+            inventory.setOrder(order);
+        }
 
         inventory.setSearchText(StringParser.fullTextSearchString(inventory));
 

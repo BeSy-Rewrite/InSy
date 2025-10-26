@@ -36,6 +36,7 @@ public interface InventoryMapper {
     @Mapping(target = "costCenter", source = "costCenter.description")
     @Mapping(target = "orderer", source = "user.name")
     @Mapping(target = "tags", source = "tags")
+    @Mapping(target = "orderId", source = "order.id")
     InventoriesResponseDTO toDto(Inventory entity);
 
     // Helper methods with @Named so that MapStruct can use them specifically
