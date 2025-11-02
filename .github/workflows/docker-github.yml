@@ -35,7 +35,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check build profile
-        if: ${{ github.ref == 'refs/heads/test'}}
+        if: ${{ github.ref == 'refs/heads/test' || github.event_name == 'pull_request' }}
         run: |
           echo "BUILD_PROFILE=test" >> "${GITHUB_ENV}"
 
@@ -49,12 +49,12 @@ jobs:
           context: ./frontend
           build-args: |
             PROFILE=${{ env.BUILD_PROFILE }}
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:${{ env.BUILD_PROFILE }}-latest
 
       - name: Build and push Backend to GitHub
         uses: docker/build-push-action@v5
         with:
           context: ./backend
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-backend:${{ env.BUILD_PROFILE }}-latest

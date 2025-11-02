@@ -38,6 +38,7 @@ export class AuthenticationService {
     // Configure the OAuth2 service with the settings from the configuration file.
     this.oauthService.configure(authCodeFlowConfig);
     this.oauthService.clearHashAfterLogin = true;
+    oauthService.setStorage(localStorage);
 
     // Initialize authentication flow outside of constructor.
     this.initializeAuthentication();
