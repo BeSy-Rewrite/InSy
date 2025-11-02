@@ -10,23 +10,21 @@
                 <div class="flex flex-wrap gap-2">
                     @for (tag of tags; track tag) {
                     <div
-                        [style]="getTagColor(tag.name)"
-                        class="rounded-full pt-0.5 pb-1 pl-4 pr-4"
-                    >{{tag.name}}</div>
+                         [style]="getTagColor(tag.name)"
+                         class="rounded-full pt-0.5 pb-1 pl-4 pr-4">{{tag.name}}</div>
                     }
                 </div>
                 }
             </div>
 
-            @if (order) {
+            @if (order()) {
             <span>Bestellnummer:
                 <a
-                    mat-button
-                    color="primary"
-                    matTooltip="In BeSy öffnen"
-                    [href]="besyOrderUrl"
-                >
-                    {{order.order_number ?? order.besy_id}}
+                   mat-button
+                   color="primary"
+                   matTooltip="In BeSy öffnen"
+                   [href]="besyOrderUrl">
+                    {{order()?.order_number ?? order()?.besy_id}}
                     <mat-icon iconPositionEnd>open_in_new</mat-icon>
                 </a>
             </span>
@@ -37,10 +35,9 @@
             }
         </div>
         <a
-            mat-button
-            color="primary"
-            [routerLink]="['/inventory', inventoryItem().id, 'edit']"
-        >Bearbeiten</a>
+           mat-button
+           color="primary"
+           [routerLink]="['/inventory', inventoryItem().id, 'edit']">Bearbeiten</a>
     </div>
 
     <!-- Divider -->
@@ -57,18 +54,16 @@
     <!-- Additional Data -->
     @for (id of panelIdNameMap.keys(); track id) {
     <mat-expansion-panel
-        #Panels
-        (expandedChange)="onPanelChange($event, id)"
-    >
+                         #Panels
+                         (expandedChange)="onPanelChange(id)">
         <mat-expansion-panel-header>
             <mat-panel-title class="text-xl">{{panelIdNameMap.get(id)}}</mat-panel-title>
             @if (id === 'extensions') {
             <button
-                mat-button
-                class="mr-4"
-                color="primary"
-                (click)="addExtension()"
-            >Erweiterung hinzufügen</button>
+                    mat-button
+                    class="mr-4"
+                    color="primary"
+                    (click)="addExtension()">Erweiterung hinzufügen</button>
             }
         </mat-expansion-panel-header>
 
@@ -76,16 +71,14 @@
         @if (panelContent.has(id) && panelContent.get(id)()!.length > 0) {
         @if (id === 'extensions') {
         <app-dynamic-list
-            [tableContent]="panelContent.get(id)()"
-            [columns]="panelColumnMaps.get(id)!"
-            buttonText="Bearbeiten"
-            (buttonClicked)="onClickExtension($event)"
-        />
+                          [tableContent]="panelContent.get(id)()"
+                          [columns]="panelColumnMaps.get(id)!"
+                          buttonText="Bearbeiten"
+                          (buttonClicked)="onClickExtension($event)" />
         } @else {
         <app-dynamic-list
-            [tableContent]="panelContent.get(id)()"
-            [columns]="panelColumnMaps.get(id)!"
-        />
+                          [tableContent]="panelContent.get(id)()"
+                          [columns]="panelColumnMaps.get(id)!" />
         }
 
         } @else {
