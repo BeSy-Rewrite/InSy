@@ -45,7 +45,7 @@ public class SecurityConfig {
     @Value("${allowed.origin}")
     private String insyFrontendUrl;
 
-    @Value("${spring.security.oauth2.client.registration.insy.client-id}")
+    @Value("${keycloak.frontend.client-id}")
     private String clientId;
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
