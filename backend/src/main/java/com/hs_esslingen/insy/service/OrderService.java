@@ -84,21 +84,27 @@ public class OrderService {
         if (dtos != null) {
             List<Order> createdOrders = new ArrayList<>();
             for (OrderCreateDTO dto : dtos) {
-                if (orderRepository.findByBesyId(dto.getOrderId())
-                        .stream()
+
+                List<Order> orders = orderRepository.findByBesyId(dto.getBesyId());
+                if (dto.getOrderNumber() != null) {
+                    orders.addAll(orderRepository.findByOrderNumber(dto.getOrderNumber()));
+                }
+                if (orders.stream()
                         .anyMatch(order -> order.getDeletedAt() == null)) {
-                    logger.info("Order with besyId {} already exists. Skipping creation.", dto.getOrderId());
+                    logger.info("Order with besyId {} or orderNumber {} already exists. Skipping creation.",
+                            dto.getBesyId(), dto.getOrderNumber());
                     continue;
                 }
 
                 Order order = Order.builder()
-                        .description("Bestellung " + dto.getOrderId())
+                        .description(dto.getDescription())
                         .price(dto.getOrderQuotePrice())
                         .company(dto.getSupplierName())
                         .createdAt(dto.getOrderCreatedDate())
                         .costCenter(costCenterService.resolveCostCenter(dto.getCostCenter()))
                         .user(dto.getUserName())
-                        .besyId(dto.getOrderId())
+                        .orderNumber(dto.getOrderNumber())
+                        .besyId(dto.getBesyId())
                         .build();
 
                 for (ItemCreateDTO item : dto.getItems()) {

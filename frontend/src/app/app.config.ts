@@ -34,7 +34,7 @@ export const authCodeFlowConfig: AuthConfig = {
   issuer: environment.issuer,
 
   // URL of the SPA to redirect the user to after login
-  redirectUri: window.location.origin + '/',
+  redirectUri: globalThis.location.origin + '/',
 
   // The SPA's id. The SPA is registerd with this id at the auth-server
   // clientId: 'server.code',

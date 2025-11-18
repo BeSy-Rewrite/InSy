@@ -11,6 +11,8 @@ import com.hs_esslingen.insy.model.Order;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
+    List<Order> findByOrderNumber(String orderNumber);
+
     List<Order> findByBesyId(Integer besyId);
 
     @Query("SELECT o FROM Order o WHERE o.deletedAt IS NULL ORDER BY o.createdAt DESC")

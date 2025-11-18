@@ -1,6 +1,7 @@
 export const environment = {
     // This is the environment configuration for the frontend application.
     apiUrl: 'http://localhost:8080',
+    besyUrl: 'http://localhost:4201',
 
     /**
      * Regular expression for validating price input formats.
@@ -14,9 +15,9 @@ export const environment = {
      */
     priceRegEx: /^\s*(\d+([.,]\d{1,2})?|(\d{1,3}(\.\d{3})*(,\d{1,2})?)|(\d{1,3}(,\d{3})*(\.\d{1,2})?))\s*€?\s*$/,
 
-    clientId: "angular-app-dev",
+    clientId: "insy-dev",
     issuer: "https://auth.insy.hs-esslingen.com/realms/insy",
-    requiredRole: "insy",
+    requiredRole: "inventory-manager",
 
     // Inventory pages cache duration in milliseconds
     cacheDurationMs: 5 * 60 * 1000, // 5 minutes

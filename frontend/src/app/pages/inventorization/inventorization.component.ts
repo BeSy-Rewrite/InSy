@@ -424,11 +424,13 @@ export class InventorizationComponent {
 
   /**
    * Handles the inventorization process for a new article.
+   * Sets the order_id of the editable inventory item.
    * If the article is already inventoried, notifies the user and does not create a new item.
    * Otherwise, proceeds to save the new inventory item.
    * @private
    */
   private _handleArticleInventorization() {
+    this.editableInventoryItem.set({ ...this.editableInventoryItem(), order_id: this.currentArticleId.orderId });
     this.orderService.getArticleById(this.currentArticleId.articleId).subscribe({
       next: (article) => {
         if (article.is_inventoried) {
@@ -450,27 +452,20 @@ export class InventorizationComponent {
    * @private
    */
   private _saveNewInventorization() {
-    this.inventoriesService.getInventoryById(this.editableInventoryItem().id).subscribe({
-      next: () => {
-        this._notify('Inventargegenstand existiert bereits, ein neuer kann nicht erstellt werden.', 'error');
-      },
-      error: () => {
-        forkJoin([this.inventoriesService.addInventoryItem(this.editableInventoryItem()).pipe(
-          tap({
-            next: (newItem) => {
-              this._notify('Inventargegenstand erfolgreich erstellt', 'success');
-            },
-            error: (error) => {
-              this._notify('Fehler beim Erstellen des neuen Inventargegenstands', 'error', error);
-            }
-          })
-        ),
-        (this.currentArticleId.orderId && this.currentArticleId.articleId) ? this._updateImportedArticle() : of({} as Article)
-        ]).subscribe({
-          next: ([newItem, _]) => {
-            return this._onInventorization(newItem);
-          }
-        });
+    forkJoin([this.inventoriesService.addInventoryItem(this.editableInventoryItem()).pipe(
+      tap({
+        next: (newItem) => {
+          this._notify('Inventargegenstand erfolgreich erstellt', 'success');
+        },
+        error: (error) => {
+          this._notify('Fehler beim Erstellen des neuen Inventargegenstands', 'error', error);
+        }
+      })
+    ),
+    (this.currentArticleId.orderId && this.currentArticleId.articleId) ? this._updateImportedArticle() : of({} as Article)
+    ]).subscribe({
+      next: ([newItem, _]) => {
+        return this._onInventorization(newItem);
       }
     });
   }
@@ -661,7 +656,7 @@ export class InventorizationComponent {
     } else {
       console.log(message);
     }
-    this._snackBar.open(message, 'Close', {
+    this._snackBar.open([message, error?.error?.message].filter(Boolean).join(' '), 'Close', {
       duration: 3000,
       panelClass: [`${type}-snackbar`]
     });

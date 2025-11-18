@@ -4,26 +4,52 @@
   <!--   Filter Section START   --->
   <div class="w-full md:w-1/5 min-w-3xs">
     <app-card title="Ausgewählte Artikel inventarisieren ({{this.checkedCount()}})">
-      <div card-content class="space-y-4 mt-4">
+      <div
+        card-content
+        class="space-y-4 mt-4"
+      >
 
-        <button mat-flat-button matTooltip="Artikel mit eigenen Inventarnummern inventarisieren."
-          class="w-full min-w-fit" color="primary" [disabled]="checkedCount() < 1" (click)="inventarize('asItems')">
+        <button
+          mat-flat-button
+          matTooltip="Artikel mit eigenen Inventarnummern inventarisieren."
+          class="w-full min-w-fit"
+          color="primary"
+          [disabled]="checkedCount() < 1"
+          (click)="inventarize('asItems')"
+        >
           Einzeln
         </button>
 
-        <button mat-stroked-button matTooltip="Artikel bestehenden Inventarnummern hinzufügen." class="w-full min-w-fit"
-          color="primary" [disabled]="checkedCount() < 1" (click)="inventarize('asExtensions')">
+        <button
+          mat-stroked-button
+          matTooltip="Artikel bestehenden Inventarnummern hinzufügen."
+          class="w-full min-w-fit"
+          color="primary"
+          [disabled]="checkedCount() < 1"
+          (click)="inventarize('asExtensions')"
+        >
           Als Erweiterungen
         </button>
 
-        <button mat-stroked-button
+        <button
+          mat-stroked-button
           matTooltip="Artikel unter einer Inventarnummer inventarisieren. Erster Artikel ist der Hauptartikel."
-          class="w-full min-w-fit" color="primary" [disabled]="checkedCount() <= 1" (click)="inventarize('addToFirst')">
+          class="w-full min-w-fit"
+          color="primary"
+          [disabled]="checkedCount() <= 1"
+          (click)="inventarize('addToFirst')"
+        >
           Als ein Gegenstand
         </button>
 
-        <button mat-stroked-button matTooltip="Ausgewählte Artikel löschen." class="w-full min-w-fit" color="warn"
-          [disabled]="checkedCount() < 1" (click)="openDeleteDialog()">
+        <button
+          mat-stroked-button
+          matTooltip="Ausgewählte Artikel löschen."
+          class="w-full min-w-fit"
+          color="warn"
+          [disabled]="checkedCount() < 1"
+          (click)="openDeleteDialog()"
+        >
           Ausgewählte löschen
         </button>
 
@@ -34,34 +60,73 @@
 
   <div class="w-full md:w-3/4">
     <app-card title="Zu inventarisierende Artikel ({{numberOfArticles()}})">
-      <div card-content class="overflow-x-auto w-full">
+      <div
+        card-content
+        class="overflow-x-auto w-full"
+      >
 
         <div class="flex items-center justify-between space-x-4">
           <!-- Checkbox aligned to the left -->
 
           <div class="px-2 py-2">
-            <mat-checkbox color="primary" [checked]="allChecked" (change)="checkAll()">Alle
+            <mat-checkbox
+              color="primary"
+              [checked]="allChecked"
+              (change)="checkAll()"
+            >Alle
               auswählen</mat-checkbox>
           </div>
 
           <!-- Buttons aligned to the right -->
           <div class="flex justify-end space-x-2">
-            <button mat-button (click)="openAllAccordion()">Alles ausklappen</button>
-            <button mat-button (click)="closeAllAccordions()">Alles einklappen</button>
+            <button
+              mat-button
+              (click)="openAllAccordion()"
+            >Alles ausklappen</button>
+            <button
+              mat-button
+              (click)="closeAllAccordions()"
+            >Alles einklappen</button>
           </div>
         </div>
 
         @for (order of orders; track order.id) {
-        <app-accordion title="{{order.description}} ({{order.articles.length}} Artikel)">
-          <div expansion-panel-header class="flex items-center justify-between">
-            <mat-checkbox color="primary" [checked]="isOrderChecked(order)" (click)="checkOrder($event, order)"
-              (keydown)="checkOrder($event, order)" />
+        <app-accordion title="Bestellung {{order.order_number ?? order.besy_id}} ({{order.articles.length}} Artikel)">
+          <div
+            expansion-panel-header
+            class="flex items-center justify-between"
+          >
+            <mat-checkbox
+              color="primary"
+              [checked]="isOrderChecked(order)"
+              (click)="checkOrder($event, order)"
+              (keydown)="checkOrder($event, order)"
+            />
           </div>
 
-          <div expansion-panel-content class="flex flex-col space-y-2">
+          <div
+            expansion-panel-content
+            class="flex flex-col space-y-2"
+          >
+            <a
+              mat-button
+              color="primary"
+              [href]="getBesyOrderUrl(order)"
+              matTooltip="In BeSy öffnen"
+              class="w-fit"
+            >
+              Bestellung in BeSy öffnen
+              <mat-icon iconPositionEnd>open_in_new</mat-icon>
+            </a>
+            {{order.description}}
+
             @for (article of order.articles; track article.article_id) {
-            <mat-checkbox [color]="checkedArticles.at(0)?.article_id === article.article_id ? 'accent' : 'primary'"
-              (click)="checkBox($event, article)" (keydown)="checkBox($event, article)" [checked]="article.checked">
+            <mat-checkbox
+              [color]="checkedArticles.at(0)?.article_id === article.article_id ? 'accent' : 'primary'"
+              (click)="checkBox($event, article)"
+              (keydown)="checkBox($event, article)"
+              [checked]="article.checked"
+            >
 
               {{article.description}}, {{article.price}}&nbsp;€, {{article.company}}, {{article.orderer}}
               {{checkedArticles.at(0)?.article_id === article.article_id ? '- Hauptartikel': ''}}

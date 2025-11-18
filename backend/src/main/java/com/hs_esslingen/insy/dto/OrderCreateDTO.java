@@ -16,8 +16,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderCreateDTO {
 
-    @JsonProperty("order_id")
-    private Integer orderId;
+    @JsonProperty("besy_id")
+    @JsonAlias("order_id")
+    private Integer besyId;
+
+    @JsonProperty("order_number")
+    private String orderNumber;
+
+    private String description;
 
     @JsonProperty("order_created_date")
     private LocalDateTime orderCreatedDate;

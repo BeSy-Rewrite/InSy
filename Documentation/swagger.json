@@ -3,11 +3,16 @@
     "info": {
         "title": "Inventarisierungsmanagment API",
         "description": "Übersicht über die API-Calls des Inventarisierungsmoduls und deren Responses.",
-        "version": "1.1.0"
+        "version": "1.2.0"
     },
     "servers": [
         {
-            "url": "insy.hs-esslingen.de"
+            "url": "insy.hs-esslingen.de",
+            "description": "Production server"
+        },
+        {
+            "url": "test.insy.hs-esslingen.de",
+            "description": "Staging and development server"
         }
     ],
     "paths": {
@@ -213,7 +218,7 @@
                             "type": "string",
                             "example": "gedankenfabrikgmbh"
                         },
-                        "description": "Führt eine Volltextsuche in verschiedenen Attributen eines Inventars durch, einschließlich  description, serialNumber, location, company.name, costCenter.description und user.name.  Zusätzlich werden auch die Felder description und company.name der zugehörigen Erweiterungen (extensions) berücksichtigt.  Der eingegebene Text wird dabei normalisiert, indem Leerzeichen entfernt und alle Zeichen in Kleinbuchstaben umgewandelt werden.\n"
+                        "description": "Führt eine Volltextsuche in verschiedenen Attributen eines Inventars durch, einschließlich description, serialNumber, location, company.name, costCenter.description und user.name. Zusätzlich werden auch die Felder description und company.name der zugehörigen Erweiterungen (extensions) berücksichtigt. Der eingegebene Text wird dabei normalisiert, indem Leerzeichen entfernt und alle Zeichen in Kleinbuchstaben umgewandelt werden.\n"
                     }
                 ],
                 "responses": {
@@ -257,7 +262,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/InventoriesCreateDTO"
+                                "$ref": "#/components/schemas/InventoriesCreateRequestDTO"
                             }
                         }
                     },
@@ -370,7 +375,7 @@
                 ],
                 "requestBody": {
                     "required": true,
-                    "description": "Array mit Feldern, die geändert werden sollen.  Jedes Element enthält das Attribut (field) und den neuen Wert. Kann leer sein, wenn keine Änderungen vorgenommen werden.\nMögliche Felder sind:\n  - cost_center\n  - inventories_description\n  - company\n  - inventories_price\n  - inventories_serial_number\n  - inventories_location\n  - orderer\n  - tags (muss ein array sein!)\n",
+                    "description": "Array mit Feldern, die geändert werden sollen.  Jedes Element enthält das Attribut (field) und den neuen Wert. Kann leer sein, wenn keine Änderungen vorgenommen werden.\nMögliche Felder sind:\n  - cost_center\n  - inventories_description\n  - company\n  - inventories_price\n  - inventories_serial_number\n  - inventories_location\n  - orderer\n  - tags (muss ein array sein!)\n  - user_name (der Name des Benutzers, der den Gegenstand bearbeitet)\n",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -886,7 +891,7 @@
                 ],
                 "requestBody": {
                     "required": true,
-                    "description": "Array mit Feldern, die geändert werden sollen.  Jedes Element enthält das Attribut (field) und den neuen Wert. Kann leer sein, wenn keine Änderungen vorgenommen werden. Beim übergeben einer inventory_id wird die Erweiterung auf das neue Inventory gemappt und von dem alten Inventory entfernt. \nMögliche Felder sind:\n  - inventory_id(Integer)\n  - description(String)\n  - serial_number(String)\n  - price(Number)\n  - company_name(String)\n",
+                    "description": "Array mit Feldern, die geändert werden sollen.  Jedes Element enthält das Attribut (field) und den neuen Wert. Kann leer sein, wenn keine Änderungen vorgenommen werden. Beim übergeben einer inventory_id wird die Erweiterung auf das neue Inventory gemappt und von dem alten Inventory entfernt.\nMögliche Felder sind:\n  - inventory_id(Integer)\n  - description(String)\n  - serial_number(String)\n  - price(Number)\n  - company_name(String)\n",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -1009,7 +1014,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/CommentRequest"
+                                    "$ref": "#/components/schemas/CommentDTO"
                                 }
                             }
                         }
@@ -1061,7 +1066,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/CommentRequest"
+                                "$ref": "#/components/schemas/CommentDTO"
                             }
                         }
                     }
@@ -1072,7 +1077,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/CommentRequest"
+                                    "$ref": "#/components/schemas/CommentDTO"
                                 }
                             }
                         }
@@ -1339,7 +1344,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/Statistic"
+                                        "$ref": "#/components/schemas/StatisticDTO"
                                     }
                                 }
                             }
@@ -1414,7 +1419,7 @@
             },
             "post": {
                 "summary": "Create new orders from BeSy",
-                "description": "Erstellt neue Bestellungen auf Basis der von BeSy übermittelten Daten. Bereits existierende Bestellungen mit gleicher besyId werden ignoriert. Die Felder entsprechen den zugehörigen Attributen aus dem Besy-Datenbankmodell",
+                "description": "Erstellt neue Bestellungen auf Basis der von BeSy übermittelten Daten. Bereits existierende Bestellungen mit gleicher besyId werden ignoriert. Die Felder entsprechen den zugehörigen Attributen aus dem Besy-Datenbankmodell. Im Erfolgsfall wird eine Liste der neu erstellten Bestellungen zurückgegeben.",
                 "operationId": "createOrder",
                 "tags": [
                     "Orders"
@@ -1434,7 +1439,17 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Bestellung(en) erfolgreich gespeichert"
+                        "description": "Bestellung(en) erfolgreich gespeichert",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/OrderResponseDTO"
+                                    }
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error 400: Bad Request",
@@ -1704,7 +1719,7 @@
         "/orders/{orderId}/items/{itemId}": {
             "patch": {
                 "summary": "Artikel in einer Bestellung aktualisieren",
-                "description": "Aktualisiert einen bestehenden Artikel anhand der übergebenen Daten im Request-Body.  \nNur Felder, die im übermittelten `ArticleDTO` gesetzt sind (nicht null), werden tatsächlich aktualisiert.  \nWird das Feld `is_inventoried` im Patch-Request auf `true` gesetzt, prüft das System anschließend automatisch,  \nob **alle Artikel** der zugehörigen Bestellung bereits inventarisiert sind.  \nFalls ja, wird die Bestellung als **abgeschlossen** markiert, indem ein `deletedAt`-Zeitstempel gesetzt wird.  \nDie Bestellung wird dabei nicht aus der Datenbank gelöscht, sondern lediglich logisch entfernt (\"soft delete\"). Dies entspricht einem Aufruf der `DELETE /orders/{order-id}`-Api.\n",
+                "description": "Aktualisiert einen bestehenden Artikel anhand der übergebenen Daten im Request-Body.\nNur Felder, die im übermittelten `ArticleDTO` gesetzt sind (nicht null), werden tatsächlich aktualisiert.\nWird das Feld `is_inventoried` im Patch-Request auf `true` gesetzt, prüft das System anschließend automatisch,\nob **alle Artikel** der zugehörigen Bestellung bereits inventarisiert sind.\nFalls ja, wird die Bestellung als **abgeschlossen** markiert, indem ein `deletedAt`-Zeitstempel gesetzt wird.\nDie Bestellung wird dabei nicht aus der Datenbank gelöscht, sondern lediglich logisch entfernt (\"soft delete\"). Dies entspricht einem Aufruf der `DELETE /orders/{order-id}`-Api.\n",
                 "operationId": "updateArticle",
                 "tags": [
                     "Articles"
@@ -1774,7 +1789,7 @@
             },
             "get": {
                 "summary": "Artikel anhand der ID abrufen",
-                "description": "Gibt einen einzelnen Artikel anhand der übergebenen Artikel-ID zurück.  \nWird kein Artikel mit der angegebenen ID gefunden, gibt die API den HTTP-Status `404 Not Found` zurück.\n",
+                "description": "Gibt einen einzelnen Artikel anhand der übergebenen Artikel-ID zurück.\nWird kein Artikel mit der angegebenen ID gefunden, gibt die API den HTTP-Status `404 Not Found` zurück.\n",
                 "operationId": "getArticleById",
                 "tags": [
                     "Articles"
@@ -1834,7 +1849,7 @@
             },
             "delete": {
                 "summary": "Artikel löschen",
-                "description": "Löscht einen Artikel anhand seiner ID.  \nWenn der Artikel nicht existiert, wird ein entsprechender Fehlerstatus zurückgegeben.  \nDie Löschung betrifft nur den Artikel, nicht die gesamte Bestellung.\n",
+                "description": "Löscht einen Artikel anhand seiner ID.\nWenn der Artikel nicht existiert, wird ein entsprechender Fehlerstatus zurückgegeben.\nDie Löschung betrifft nur den Artikel, nicht die gesamte Bestellung.\n",
                 "operationId": "deleteArticle",
                 "tags": [
                     "Articles"
@@ -1903,7 +1918,7 @@
                 }
             }
         },
-        "/download/xlsx": {
+        "/download/xls": {
             "get": {
                 "summary": "Inventardaten als Excel herunterladen",
                 "description": "Gibt eine Excel-Datei mit der vollständigen Inventarliste zurück.",
@@ -1982,10 +1997,10 @@
     ],
     "components": {
         "schemas": {
-            "InventoriesCreateDTO": {
+            "InventoriesCreateRequestDTO": {
                 "type": "object",
                 "properties": {
-                    "cost_center": {
+                    "costCenter": {
                         "type": "string",
                         "example": "723458320Z"
                     },
@@ -2135,6 +2150,11 @@
                         "description": "Name des Felds, das geändert werden soll (z.B. \"cost_center\", \"inventories_price\", \"tags\")",
                         "example": "Teständerung"
                     },
+                    "user_name": {
+                        "type": "string",
+                        "description": "User, der die Änderung vorgenommen hat",
+                        "example": "Peter Müller"
+                    },
                     "tags": {
                         "description": "Neuer Wert für das Feld",
                         "example": [
@@ -2235,7 +2255,7 @@
                     }
                 }
             },
-            "CommentRequest": {
+            "CommentDTO": {
                 "type": "object",
                 "properties": {
                     "comments_id": {
@@ -2309,14 +2329,14 @@
                     }
                 }
             },
-            "Statistic": {
+            "StatisticDTO": {
                 "type": "object",
                 "properties": {
-                    "total_orders": {
+                    "totalOrders": {
                         "type": "integer",
                         "example": 53
                     },
-                    "total_price": {
+                    "totalPrice": {
                         "type": "number",
                         "format": "float",
                         "example": 12345.67
@@ -2334,7 +2354,7 @@
                                     "type": "integer",
                                     "example": 23
                                 },
-                                "order_price": {
+                                "orderPrice": {
                                     "type": "number",
                                     "format": "float",
                                     "example": 1234.56
@@ -2666,9 +2686,18 @@
             "OrderCreateDTO": {
                 "type": "object",
                 "properties": {
-                    "order_id": {
+                    "besy_id": {
+                        "description": "BeSy order ID (replcaces order_id field)",
                         "type": "integer",
                         "example": 1001
+                    },
+                    "order_number": {
+                        "type": "string",
+                        "example": "40023it-25-304"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "This is an example order."
                     },
                     "order_created_date": {
                         "type": "string",
@@ -2679,7 +2708,8 @@
                         "type": "string",
                         "example": "Tech GmbH"
                     },
-                    "cost_center_name": {
+                    "cost_center": {
+                        "description": "Alias, deprecated: cost_center_name",
                         "type": "string",
                         "example": "IT-Abteilung"
                     },
@@ -2700,10 +2730,10 @@
                     }
                 },
                 "required": [
-                    "order_id",
+                    "besy_id",
                     "order_created_date",
                     "supplier_name",
-                    "cost_center_name",
+                    "cost_center",
                     "user_name",
                     "order_quote_price",
                     "items"

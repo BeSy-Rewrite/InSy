@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -76,6 +78,11 @@ public class Inventory {
     @Column(name = "deleted_at")
     @Builder.Default
     private LocalDateTime deletedAt = null;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JsonIdentityReference(alwaysAsId = true)
+    @JoinColumn(name = "orders_id", nullable = true)
+    private Order order;
 
     @OneToMany(mappedBy = "inventories", cascade = { CascadeType.REMOVE,
             CascadeType.ALL }, orphanRemoval = true, fetch = FetchType.LAZY)

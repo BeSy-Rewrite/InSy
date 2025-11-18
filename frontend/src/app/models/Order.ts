@@ -9,6 +9,8 @@ export interface Order {
   cost_center: string,
   orderer: string,
   articles: Article[],
+  besy_id: number,
+  order_number?: string,
 }
 
 export interface ArticleId {

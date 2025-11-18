@@ -7,14 +7,12 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.List;
 
-
 @Getter
 @Setter
 public class InventoryCreateRequestDTO {
 
     @JsonProperty("cost_center")
     private String costCenter;
-
 
     @JsonProperty("id")
     private Integer inventoriesId;
@@ -35,4 +33,7 @@ public class InventoryCreateRequestDTO {
 
     @JsonProperty("tags")
     private List<Integer> tags;
+
+    @JsonProperty("order_id")
+    private Integer orderId;
 }
