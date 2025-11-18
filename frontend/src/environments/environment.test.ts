@@ -15,9 +15,9 @@ export const environment = {
      */
     priceRegEx: /^\s*(\d+([.,]\d{1,2})?|(\d{1,3}(\.\d{3})*(,\d{1,2})?)|(\d{1,3}(,\d{3})*(\.\d{1,2})?))\s*€?\s*$/,
 
-    clientId: "angular-app-test",
+    clientId: "insy-test",
     issuer: "https://auth.insy.hs-esslingen.com/realms/insy",
-    requiredRole: "insy-test",
+    requiredRole: "inventory-manager",
 
     // Inventory pages cache duration in milliseconds
     cacheDurationMs: 5 * 60 * 1000, // 5 minutes
