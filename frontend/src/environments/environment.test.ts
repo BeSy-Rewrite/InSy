@@ -1,6 +1,6 @@
 export const environment = {
     // This is the environment configuration for the frontend application.
-    apiUrl: 'https://api.test.insy.hs-esslingen.com',
+    apiUrl: 'https://test.insy.hs-esslingen.com/api',
     besyUrl: 'https://test.besy.hs-esslingen.com',
 
     /**
