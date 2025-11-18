@@ -147,7 +147,7 @@ public class ExcelService {
             for (int i = 0; i < entry.getValue().size(); i++) {
                 Row row = sheet.createRow(i + 1 + STARTING_ROW_OFFSET); // 1 offset for headings, STARTING_ROW_OFFSET
                                                                         // for
-                                                                        // compatability with old excel
+                                                                        // compatibility with old excel
                 Inventory inventory = entry.getValue().get(i);
                 List<Comment> comments = inventory.getComments();
 

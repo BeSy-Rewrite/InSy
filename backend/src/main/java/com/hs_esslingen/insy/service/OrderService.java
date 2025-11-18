@@ -91,8 +91,8 @@ public class OrderService {
                 }
                 if (orders.stream()
                         .anyMatch(order -> order.getDeletedAt() == null)) {
-                    logger.info("Order with besyId or orderNumber {} already exists. Skipping creation.",
-                            dto.getBesyId());
+                    logger.info("Order with besyId {} or orderNumber {} already exists. Skipping creation.",
+                            dto.getBesyId(), dto.getOrderNumber());
                     continue;
                 }
 
