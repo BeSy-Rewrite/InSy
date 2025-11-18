@@ -288,7 +288,7 @@ public class InventoryService {
         Inventory inventory = inventoryOptional.get();
 
         // Inventory before change
-        InventoryCreateRequestDTO inventoryOld = InventoryService.mapInventoryToDto(inventory);
+        InventoriesResponseDTO inventoryOld = inventoriesMapper.toDto(inventory);
 
         for (Map.Entry<String, Object> entry : patchData.entrySet()) {
             String fieldName = entry.getKey();
@@ -370,7 +370,7 @@ public class InventoryService {
         inventoryRepository.save(updatedInventory);
 
         // Inventory after change
-        InventoryCreateRequestDTO inventoryNew = InventoryService.mapInventoryToDto(updatedInventory);
+        InventoriesResponseDTO inventoryNew = inventoriesMapper.toDto(updatedInventory);
 
         Object userNameRaw = patchData.get("user_name");
         User author = userService.resolveUser(
