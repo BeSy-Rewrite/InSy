@@ -656,7 +656,7 @@ export class InventorizationComponent {
     } else {
       console.log(message);
     }
-    this._snackBar.open([message, error?.error?.message].join(' '), 'Close', {
+    this._snackBar.open([message, error?.error?.message].filter(Boolean).join(' '), 'Close', {
       duration: 3000,
       panelClass: [`${type}-snackbar`]
     });

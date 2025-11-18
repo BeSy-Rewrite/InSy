@@ -2687,7 +2687,7 @@
                 "type": "object",
                 "properties": {
                     "besy_id": {
-                        "description": "Alias, deprecated: order_id",
+                        "description": "BeSy order ID (replcaces order_id field)",
                         "type": "integer",
                         "example": 1001
                     },
