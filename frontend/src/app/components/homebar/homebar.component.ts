@@ -35,7 +35,7 @@ export class HomebarComponent {
   constructor(public readonly router: Router) {
     router.events.subscribe(() => {
       this.activeMenuItem.set(
-        this.links.findIndex(link => link.path === `/${router.url.split('/')[1]}`)
+        this.links.findIndex(link => link.path === `/${router.parseUrl(router.url).root.children['primary'].segments[0].path}`)
       );
     });
   }
