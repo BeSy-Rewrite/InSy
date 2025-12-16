@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { afterNextRender, Component, input, QueryList, ViewChildren } from '@angular/core';
+import { afterNextRender, Component, input, OnChanges, QueryList, signal, ViewChildren } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
@@ -63,7 +63,7 @@ import { localizePrice, unLocalizePrice } from '../../utils';
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
 })
-export class DetailsComponent {
+export class DetailsComponent implements OnChanges {
   panelIdNameMap = new Map<string, string>([
     ['extensions', 'Erweiterungen'],
     ['comments', 'Kommentare'],
@@ -80,7 +80,7 @@ export class DetailsComponent {
   changes = input([], { transform: mergeChangeLocation });
 
   besyOrderUrl: string | undefined = undefined;
-  order: Order | undefined = undefined;
+  order = signal<Order | undefined>(undefined);
 
   inventoryItemInternal!: Map<string, string>;
 
@@ -165,7 +165,7 @@ export class DetailsComponent {
     }
     this.orderService.getOrderById(this.inventoryItem().order_id!).subscribe(order => {
       this.besyOrderUrl = `${environment.besyUrl}/orders/` + order.besy_id;
-      this.order = order;
+      this.order.set(order);
     });
   }
 
@@ -196,7 +196,7 @@ export class DetailsComponent {
 
 
   numberOfPanelChanges: number = -1;
-  onPanelChange(event: boolean, panelId: string): void {
+  onPanelChange(panelId: string): void {
     if (panelId === 'changes') {
       this.numberOfPanelChanges++;
       switch (this.numberOfPanelChanges) {
@@ -220,10 +220,6 @@ export class DetailsComponent {
 }
 
 // Defines the table and column display names for the change history entries
-const changesTableNames = new Map<string, string>([
-  ['inventory_items', 'Hauptartikel'],
-  ['extensions', 'Erweiterung']
-]);
 const changesColumnNames = new Map<string, string>([
   ['location', 'Standort/Nutzer:in'],
   ['price', 'Preis'],
@@ -260,7 +256,7 @@ function mergeChangeLocation(rawChanges: Change[]): ChangeInternal[] {
     }
     return internalChange;
 
-  })
+  });
   return changes;
 }
 

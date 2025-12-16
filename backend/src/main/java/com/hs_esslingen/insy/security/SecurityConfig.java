@@ -7,12 +7,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,32 +31,44 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 @Profile("production")
 public class SecurityConfig {
-    @Autowired
-    private Environment environment;
+
+    @Value("${required.keycloak.role}")
+    private String requiredKeycloakRole;
+
+    @Value("${allowed.origin}")
+    private String insyFrontendUrl;
+
+    @Value("${keycloak.frontend.client-id}")
+    private String clientId;
+
+    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+    private String issuerUri;
+
+    @Value("${besy.username}")
+    private String besyUsername;
+
+    @Value("${besy.password}")
+    private String besyPassword;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
             Converter<Jwt, AbstractAuthenticationToken> authenticationConverter) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(request -> {
-                    CorsConfiguration corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.addAllowedOrigin(environment.getProperty("allowed.origin"));
-                    corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
-                    corsConfiguration.addAllowedHeader("*");
-                    return corsConfiguration;
-                }))
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> {
-                    final String requiredAuthority = environment.getProperty("required.keycloak.role", "insy");
                     authorize
                             // Allow BeSy to create orders
-                            .requestMatchers("/orders/**").hasAnyAuthority(requiredAuthority, "SYSTEM")
-                            .anyRequest().hasAuthority(requiredAuthority);
+                            .requestMatchers(HttpMethod.POST, "/orders/**")
+                            .hasAnyAuthority(requiredKeycloakRole, "SYSTEM")
+                            .anyRequest().hasAuthority(requiredKeycloakRole);
                 })
                 .httpBasic(Customizer.withDefaults()) // Enable HTTP Basic authentication
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -65,9 +77,20 @@ public class SecurityConfig {
     }
 
     @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList(insyFrontendUrl));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
     public JwtDecoder jwtDecoder() {
         return JwtDecoders
-                .fromIssuerLocation(environment.getProperty("spring.security.oauth2.resourceserver.jwt.issuer-uri"));
+                .fromIssuerLocation(issuerUri);
     }
 
     // Hardcoded user to allow BeSy to access the API
@@ -75,8 +98,8 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder encoder) {
         UserDetails user = User.builder()
-                .username(environment.getProperty("besy.username", "besy"))
-                .password(encoder.encode(environment.getProperty("besy.password", "secret")))
+                .username(besyUsername)
+                .password(encoder.encode(besyPassword))
                 .authorities("SYSTEM")
                 .build();
         return new InMemoryUserDetailsManager(user);
@@ -95,7 +118,8 @@ public class SecurityConfig {
     @Bean
     AuthoritiesConverter realmRolesAuthoritiesConverter() {
         return claims -> {
-            var realmAccess = Optional.ofNullable((Map<String, Object>) claims.get("realm_access"));
+            var realmAccess = Optional.ofNullable((Map<String, Object>) claims.get("resource_access"))
+                    .flatMap(map -> Optional.ofNullable((Map<String, Object>) map.get(clientId)));
             var roles = realmAccess.flatMap(map -> Optional.ofNullable((List<String>) map.get("roles")));
             return roles.map(List::stream)
                     .orElse(Stream.empty())

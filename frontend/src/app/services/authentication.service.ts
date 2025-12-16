@@ -38,6 +38,7 @@ export class AuthenticationService {
     // Configure the OAuth2 service with the settings from the configuration file.
     this.oauthService.configure(authCodeFlowConfig);
     this.oauthService.clearHashAfterLogin = true;
+    oauthService.setStorage(localStorage);
 
     // Initialize authentication flow outside of constructor.
     this.initializeAuthentication();
@@ -69,7 +70,7 @@ export class AuthenticationService {
    * This method redirects the user to the authorization server for authentication.
    */
   login(): void {
-    this.oauthService.initCodeFlow(window.location.pathname);
+    this.oauthService.initCodeFlow(globalThis.location.pathname);
   }
 
   /**
@@ -100,7 +101,7 @@ export class AuthenticationService {
    * If no roles are found, it returns an empty array.
    */
   getRoles(): string[] {
-    return this.oauthService.getIdentityClaims()?.['realm_access']?.['roles'] ?? [];
+    return this.oauthService.getIdentityClaims()?.['resource_access']?.[environment.clientId]?.['roles'] ?? [];
   }
 
   /**
