@@ -1,4 +1,4 @@
-import { Component, inject, input, model, output, signal, WritableSignal } from '@angular/core';
+import { Component, inject, input, model, output, signal, viewChild, WritableSignal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -162,6 +162,8 @@ export class InventorizationComponent {
    */
   deletedComments = signal([] as Comment[]);
 
+  commentsEditor = viewChild.required(CommentsEditorComponent);
+
   tags = signal<Tag[]>([]); // Holds the tags for the inventory item
   newTags = signal<string[]>([]); // Holds the new tags added by the user
   availableTags = signal<Tag[]>([]); // Holds the available tags fetched from the backend
@@ -241,6 +243,10 @@ export class InventorizationComponent {
    * Emits the onInventorization event after completion.
    */
   saveInventorization() {
+    if (this.commentsEditor().hasUnsavedChanges()) {
+      this._notify('Bitte speichern Sie alle Kommentare, bevor Sie den Inventargegenstand speichern.', 'info');
+      return;
+    }
     if (this.isNew()) {
       if (this.currentArticleId.orderId !== undefined && this.currentArticleId.articleId !== undefined) {
         this._handleArticleInventorization();
@@ -454,7 +460,7 @@ export class InventorizationComponent {
   private _saveNewInventorization() {
     forkJoin([this.inventoriesService.addInventoryItem(this.editableInventoryItem()).pipe(
       tap({
-        next: (newItem) => {
+        next: () => {
           this._notify('Inventargegenstand erfolgreich erstellt', 'success');
         },
         error: (error) => {
@@ -533,7 +539,7 @@ export class InventorizationComponent {
     } else if (this.extensionArticles().length > 0) {
       this.router.navigate(['/new-extension'], { queryParams: { inventoryId: inventoryItem.id, extensionArticles: [...this.extensionArticles()] } });
     } else if (this.currentArticleId.orderId && this.currentArticleId.articleId) {
-      this.router.navigate(['/orders'])
+      this.router.navigate(['/orders']);
     } else {
       this.router.navigate(['/inventory/', inventoryItem.id]);
     }
@@ -556,7 +562,7 @@ export class InventorizationComponent {
     return this.tagsService.addTags(newTags).pipe(
       tap({
         next: (savedTags) => {
-          this.tags.update(t => [...currentTags, ...savedTags]);
+          this.tags.update(() => [...currentTags, ...savedTags]);
           console.log('Tags erstellt', this.tags());
           this.newTags.set([]);
         },

@@ -3,8 +3,6 @@ package com.hs_esslingen.insy.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hs_esslingen.insy.model.User;
-import com.hs_esslingen.insy.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +11,7 @@ import com.hs_esslingen.insy.exception.BadRequestException;
 import com.hs_esslingen.insy.exception.NotFoundException;
 import com.hs_esslingen.insy.model.Comment;
 import com.hs_esslingen.insy.model.Inventory;
+import com.hs_esslingen.insy.model.User;
 import com.hs_esslingen.insy.repository.CommentRepository;
 import com.hs_esslingen.insy.repository.InventoryRepository;
 
@@ -24,7 +23,7 @@ public class CommentService {
 
         private final CommentRepository commentRepository;
         private final InventoryRepository inventoryRepository;
-        private final UserRepository userRepository;
+        private final UserService userService;
 
         /**
          * Retrieves all comments for a specific inventory item by its ID.
@@ -65,25 +64,24 @@ public class CommentService {
          */
         public CommentDTO createComment(Integer inventoryId, CommentDTO commentDTO) {
                 Inventory inventory = inventoryRepository.findById(inventoryId)
-                        .orElseThrow(() -> new NotFoundException("Inventory with id: " + inventoryId + " not found"));
-
-                User author = userRepository.findByName(commentDTO.getAuthor())
-                        .orElseGet(() -> userRepository.save(new User(commentDTO.getAuthor())));
+                                .orElseThrow(() -> new NotFoundException(
+                                                "Inventory with id: " + inventoryId + " not found"));
+                User author = userService.resolveUser(commentDTO.getAuthor());
 
                 Comment comment = Comment.builder()
-                        .inventories(inventory)
-                        .description(commentDTO.getDescription())
-                        .author(author)
-                        .build();
+                                .inventories(inventory)
+                                .description(commentDTO.getDescription())
+                                .author(author)
+                                .build();
 
                 Comment savedComment = commentRepository.save(comment);
 
                 return CommentDTO.builder()
-                        .id(savedComment.getId())
-                        .description(savedComment.getDescription())
-                        .createdAt(savedComment.getCreatedAt())
-                        .author(author.getName())
-                        .build();
+                                .id(savedComment.getId())
+                                .description(savedComment.getDescription())
+                                .createdAt(savedComment.getCreatedAt())
+                                .author(author.getName())
+                                .build();
         }
 
         /**

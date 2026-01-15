@@ -83,7 +83,7 @@ export class CommentsEditorComponent {
   onChanges = output();
 
   displayedComments = computed(() => {
-    return new MatTableDataSource([...this.unchangedComments(), ...this.newComments()])
+    return new MatTableDataSource([...this.unchangedComments(), ...this.newComments()]);
   });
   commentsColumns = new Map<string, string>([
     ['description', 'Kommentar'],
@@ -150,11 +150,11 @@ export class CommentsEditorComponent {
   }
 
   /**
-   * Checks if there are any unsaved changes (new or deleted comments).
+   * Checks if there are unsaved changes in the new comment input field.
    * @returns {boolean} True if there are unsaved changes, false otherwise.
    */
   hasUnsavedChanges(): boolean {
-    return this.newComments().length > 0 || this.deletedComments().length > 0;
+    return this.newCommentFormControl.value?.trim() !== '';
   }
 
 }
