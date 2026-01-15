@@ -144,8 +144,8 @@ export class ServerTableDataSourceService<T> extends DataSource<T> {
         queryParams.currentSort.direction,
         queryParams.currentFilter,
         queryParams.currentSearchText,
-      )
-    })
+      );
+    });
   }
 
 
@@ -170,7 +170,7 @@ export class ServerTableDataSourceService<T> extends DataSource<T> {
       this._queryParams.next({
         ...this._queryParams.value, currentPage: { pageIndex: page.pageIndex, pageSize: page.pageSize }
       });
-    })
+    });
   }
 
   /**
@@ -184,9 +184,8 @@ export class ServerTableDataSourceService<T> extends DataSource<T> {
       if (sort.active === 'orderer') sort.active = 'user'; // since backend returns 'orderer' but wants it back as 'user' ???
       if (sort.active === 'date') sort.active = 'createdAt'; // this is my mistake =D
       if (sort.active === 'cost_center') sort.active = 'costCenter'; // this is my mistake =D
-      console.log(sort.active);
       this._queryParams.next({ ...this._queryParams.value, currentSort: sort });
-    })
+    });
   }
 
   /**
@@ -198,9 +197,6 @@ export class ServerTableDataSourceService<T> extends DataSource<T> {
     this._filter = filter;
     this._filter.valueChanges.subscribe((filter: Filter) => {
 
-      if (filter.createdAfter != null) {
-        console.log(DateTime.fromISO(filter.createdAfter, { zone: 'Europe/Berlin' }).toISO());
-      }
       if (filter.createdAfter && filter.createdBefore) {
         filter.createdAfter = DateTime.fromJSDate(new Date(filter.createdAfter)).setZone('Europe/Berlin').startOf('day').toUTC().toISO()?.substring(0, 10) ?? undefined;
         filter.createdBefore = DateTime.fromJSDate(new Date(filter.createdBefore)).setZone('Europe/Berlin').endOf('day').toUTC().toISO()?.substring(0, 10) ?? undefined;
@@ -222,7 +218,7 @@ export class ServerTableDataSourceService<T> extends DataSource<T> {
       .pipe(debounceTime(250))
       .subscribe((searchText: string) => {
         this._queryParams.next({ ...this._queryParams.value, currentSearchText: searchText });
-      })
+      });
   }
 
   /**
@@ -275,12 +271,12 @@ export class ServerTableDataSourceService<T> extends DataSource<T> {
       }
       // Update the total item count for paginator
       if (this._paginator) this._paginator.length = inventories.totalElements;
-    })
+    });
   }
 
 
   // This method is used by MatTable to connect to the data source
-  connect(collectionViewer: CollectionViewer): Observable<T[]> {
+  connect(_collectionViewer: CollectionViewer): Observable<T[]> {
     const queryParams = this._queryParams.value;
     this.checkFilterandFetchData(
       queryParams.currentPage.pageIndex,
@@ -295,8 +291,7 @@ export class ServerTableDataSourceService<T> extends DataSource<T> {
 
   // This method is used by MatTable to disconnect from the data source
   // This needs to stay EMPTY, otherwise Mat-Table wont render anything when re-entering Inventory Page!
-  disconnect(collectionViewer: CollectionViewer): void {
-    console.log("Disconnecting data source");
+  disconnect(_collectionViewer: CollectionViewer): void {
   }
 
   getSearchText(): string {
