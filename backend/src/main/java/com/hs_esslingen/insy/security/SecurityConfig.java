@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -48,6 +47,9 @@ public class SecurityConfig {
     @Value("${keycloak.frontend.client-id}")
     private String clientId;
 
+    @Value("${keycloak.besy.client-id}")
+    private String besyClientId;
+
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String issuerUri;
 
@@ -56,6 +58,8 @@ public class SecurityConfig {
 
     @Value("${besy.password}")
     private String besyPassword;
+
+    private static final String BESY_ROLE = "BESY_ACCESS";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
@@ -67,7 +71,7 @@ public class SecurityConfig {
                     authorize
                             // Allow BeSy to create orders
                             .requestMatchers(HttpMethod.POST, "/orders/**")
-                            .hasAnyAuthority(requiredKeycloakRole, "SYSTEM")
+                            .hasAnyAuthority(requiredKeycloakRole, BESY_ROLE)
                             .anyRequest().hasAuthority(requiredKeycloakRole);
                 })
                 .httpBasic(Customizer.withDefaults()) // Enable HTTP Basic authentication
@@ -100,7 +104,7 @@ public class SecurityConfig {
         UserDetails user = User.builder()
                 .username(besyUsername)
                 .password(encoder.encode(besyPassword))
-                .authorities("SYSTEM")
+                .authorities(BESY_ROLE)
                 .build();
         return new InMemoryUserDetailsManager(user);
     }
@@ -118,11 +122,17 @@ public class SecurityConfig {
     @Bean
     AuthoritiesConverter realmRolesAuthoritiesConverter() {
         return claims -> {
-            var realmAccess = Optional.ofNullable((Map<String, Object>) claims.get("resource_access"))
+            Optional<Map<String, Object>> realmAccess = Optional
+                    .ofNullable((Map<String, Object>) claims.get("resource_access"))
                     .flatMap(map -> Optional.ofNullable((Map<String, Object>) map.get(clientId)));
-            var roles = realmAccess.flatMap(map -> Optional.ofNullable((List<String>) map.get("roles")));
-            return roles.map(List::stream)
-                    .orElse(Stream.empty())
+            Optional<List<String>> roles = realmAccess
+                    .flatMap(map -> Optional.ofNullable((List<String>) map.get("roles")));
+
+            List<String> presentRoles = roles.orElse(new java.util.ArrayList<>());
+            if (claims.get("client_id").equals(besyClientId))
+                presentRoles.add(BESY_ROLE);
+
+            return presentRoles.stream()
                     .map(SimpleGrantedAuthority::new)
                     .map(GrantedAuthority.class::cast)
                     .toList();
