@@ -129,7 +129,7 @@ public class SecurityConfig {
                     .flatMap(map -> Optional.ofNullable((List<String>) map.get("roles")));
 
             List<String> presentRoles = roles.orElse(new java.util.ArrayList<>());
-            if (claims.get("client_id").equals(besyClientId))
+            if (besyClientId.equals(claims.get("client_id")))
                 presentRoles.add(BESY_ROLE);
 
             return presentRoles.stream()
