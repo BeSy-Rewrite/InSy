@@ -13,16 +13,14 @@
             "defaultValue": "https://insy.hs-esslingen.com"
         },
         {
-            "name": "besy.username",
+            "name": "keycloak.besy.client-id",
             "type": "java.lang.String",
-            "description": "The username for BeSy basic authentication.",
-            "defaultValue": "besy"
+            "description": "The Keycloak client ID used inside the access token for role grouping."
         },
         {
-            "name": "besy.password",
+            "name": "keycloak.frontend.client-id",
             "type": "java.lang.String",
-            "description": "The password for BeSy basic authentication.",
-            "defaultValue": "secret"
+            "description": "The Keycloak client ID used by the BeSy backend to create orders."
         }
     ]
 }

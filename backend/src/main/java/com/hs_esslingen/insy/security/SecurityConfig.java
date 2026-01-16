@@ -18,16 +18,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -52,12 +46,6 @@ public class SecurityConfig {
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String issuerUri;
-
-    @Value("${besy.username}")
-    private String besyUsername;
-
-    @Value("${besy.password}")
-    private String besyPassword;
 
     private static final String BESY_ROLE = "BESY_ACCESS";
 
@@ -95,24 +83,6 @@ public class SecurityConfig {
     public JwtDecoder jwtDecoder() {
         return JwtDecoders
                 .fromIssuerLocation(issuerUri);
-    }
-
-    // Hardcoded user to allow BeSy to access the API
-    // Uses basic authentication
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-        UserDetails user = User.builder()
-                .username(besyUsername)
-                .password(encoder.encode(besyPassword))
-                .authorities(BESY_ROLE)
-                .build();
-        return new InMemoryUserDetailsManager(user);
-    }
-
-    // Password encoder bean for encoding passwords
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     // Converter to extract roles from JWT claims
