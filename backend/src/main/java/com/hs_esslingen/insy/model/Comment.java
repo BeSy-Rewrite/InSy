@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -39,8 +38,7 @@ public class Comment {
     private Inventory inventories;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "author_user_id", referencedColumnName = "id", nullable = true)
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
     private User author;
 
     @Column(nullable = false)
@@ -51,9 +49,9 @@ public class Comment {
     private final LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
 
     @Builder
-    public Comment(Inventory inventories, User users, String description) {
+    public Comment(Inventory inventories, User author, String description) {
         this.inventories = inventories;
-        this.author = users;
+        this.author = author;
         this.description = description;
         this.createdAt = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
     }
