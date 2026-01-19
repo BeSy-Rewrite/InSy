@@ -4,6 +4,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterOutlet } from '@angular/router';
+import { FooterComponent } from './components/footer/footer.component';
 import { HomebarComponent } from "./components/homebar/homebar.component";
 
 @Component({
@@ -15,7 +16,8 @@ import { HomebarComponent } from "./components/homebar/homebar.component";
     MatBadgeModule,
     MatTooltipModule,
     ScrollingModule,
-    HomebarComponent
+    HomebarComponent,
+    FooterComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
