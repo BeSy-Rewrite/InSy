@@ -54,7 +54,7 @@ jobs:
           COMMIT_URL="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
 
           # Update version.ts file
-          echo "export const build = { version: '${VERSION}', commitUrl: '${COMMIT_URL}' };" > src/environments/version.ts
+          echo "export const build = { version: '${VERSION}', commitUrl: '${COMMIT_URL}' };" > frontend/src/environments/version.ts
           echo "Updated version.ts to: ${VERSION}"
 
           # Store version for later use
