@@ -3,6 +3,11 @@ export const environment = {
     apiUrl: 'https://test.insy.hs-esslingen.com/api',
     besyUrl: 'https://test.besy.hs-esslingen.com',
 
+    footerLinks: [
+        { name: 'BeSy', link: 'https://test.besy.hs-esslingen.com' },
+    ],
+    bugReportUrl: 'https://github.com/kr1pt0n05/Inventarisierungsmodul/issues/new/choose',
+
     /**
      * Regular expression for validating price input formats.
      *

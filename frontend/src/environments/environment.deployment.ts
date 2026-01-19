@@ -1,10 +1,10 @@
 export const environment = {
     // This is the environment configuration for the frontend application.
-    apiUrl: 'https://insy.hs-esslingen.com/api',
-    besyUrl: 'https://besy.hs-esslingen.com',
+    apiUrl: 'https://insy.it.hs-esslingen.de/api',
+    besyUrl: 'https://besy.it.hs-esslingen.de',
 
     footerLinks: [
-        { name: 'BeSy', link: 'https://besy.hs-esslingen.com' },
+        { name: 'BeSy', link: 'https://besy.it.hs-esslingen.de' },
     ],
     bugReportUrl: 'https://github.com/kr1pt0n05/Inventarisierungsmodul/issues/new/choose',
 
@@ -21,7 +21,7 @@ export const environment = {
     priceRegEx: /^\s*(\d+([.,]\d{1,2})?|(\d{1,3}(\.\d{3})*(,\d{1,2})?)|(\d{1,3}(,\d{3})*(\.\d{1,2})?))\s*€?\s*$/,
 
     clientId: "insy",
-    issuer: "https://auth.insy.hs-esslingen.com/realms/insy",
+    issuer: "https://auth.it.hs-esslingen.de/realms/he-it",
     requiredRole: "inventory-manager",
 
     // Inventory pages cache duration in milliseconds
