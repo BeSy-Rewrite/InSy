@@ -19,11 +19,12 @@ services:
 
   backend:
     container_name: insy-backend
-    image: "ghcr.io/kr1pt0n05/insy-backend:${CONFIG}-latest"
+    image: "ghcr.io/kr1pt0n05/insy-backend:latest"
     env_file:
       - path: .env
         required: true
     environment:
+      SPRING_PROFILES_ACTIVE: "${SPRING_PROFILE}"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://insy-postgres:5432/${POSTGRES_DB}"
     labels:
       - "traefik.enable=true"
@@ -36,7 +37,6 @@ services:
       - internal
     depends_on:
       - db
-
 
 networks:
   traefik:
