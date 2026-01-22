@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -25,9 +25,8 @@ import { OrderService } from '../../services/order.service';
     MatCheckboxModule,
     MatTooltipModule,
     MatExpansionModule,
-    CommonModule,
     MatIconModule
-  ],
+],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.css'
 })

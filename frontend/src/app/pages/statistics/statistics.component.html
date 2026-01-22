@@ -33,16 +33,16 @@
           </thead>
           <tbody>
             @if (userOrders.length === 0) {
-            <tr>
-              <td colspan="3" class="text-center py-4 text-gray-500">Keine Daten vorhanden</td>
-            </tr>
+              <tr>
+                <td colspan="3" class="text-center py-4 text-gray-500">Keine Daten vorhanden</td>
+              </tr>
             }
             @for (user of userOrders; track $index; let even = $even) {
-            <tr [ngClass]="even ? 'bg-gray-100' : 'bg-gray-300'">
-              <td class="p-2">{{ user.name }}</td>
-              <td class="p-2 text-right">{{ user.quantity }}</td>
-              <td class="p-2 text-right"><span class="justify-around">{{ localizePrice(user.orderPrice) }}</span></td>
-            </tr>
+              <tr [ngClass]="even ? 'bg-gray-100' : 'bg-gray-300'">
+                <td class="p-2">{{ user.name }}</td>
+                <td class="p-2 text-right">{{ user.quantity }}</td>
+                <td class="p-2 text-right"><span class="justify-around">{{ localizePrice(user.orderPrice) }}</span></td>
+              </tr>
             }
           </tbody>
         </table>
@@ -54,15 +54,18 @@
       <canvas #pieChart width="300" height="300" class="max-w-96 max-h-96"></canvas>
       <div class="border p-4 w-full max-w-xs border-gray-300 rounded-lg">
         <strong class="block mb-2">Nutzer</strong>
-        <ul class="space-y-1" *ngIf="userOrders.length > 0; else noLegend">
-          <li *ngFor="let user of userOrders; let i = index" class="flex items-center gap-2">
-            <span [style.color]="legendColors[i]">■</span>
-            <span class="text-gray-800">{{ user.name }}</span>
-          </li>
-        </ul>
-        <ng-template #noLegend>
+        @if (userOrders.length > 0) {
+          <ul class="space-y-1">
+            @for (user of userOrders; track user; let i = $index) {
+              <li class="flex items-center gap-2">
+                <span [style.color]="legendColors[i]">■</span>
+                <span class="text-gray-800">{{ user.name }}</span>
+              </li>
+            }
+          </ul>
+        } @else {
           <p class="text-gray-500 text-sm">Keine Nutzer verfügbar</p>
-        </ng-template>
+        }
       </div>
     </div>
   </div>
