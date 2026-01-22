@@ -7,7 +7,7 @@ on:
   push:
     branches: ["main", "test", "backend", "frontend"]
     # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
+    tags: ["v*.*.*"]
   pull_request:
     branches: ["main", "test", "backend", "frontend"]
   workflow_dispatch:
@@ -100,7 +100,7 @@ jobs:
           build-args: |
             PROFILE=${{ env.BUILD_PROFILE }}
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend-${{ env.BUILD_PROFILE }}:latest
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:${{ env.BUILD_PROFILE }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -109,7 +109,7 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-backend-${{ env.BUILD_PROFILE }}:latest
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-backend:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -123,6 +123,6 @@ jobs:
           build-args: |
             PROFILE=deployment
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend-deployment:latest
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:deployment
           cache-from: type=gha
           cache-to: type=gha,mode=max

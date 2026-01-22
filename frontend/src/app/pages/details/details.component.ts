@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { afterNextRender, Component, input, OnChanges, QueryList, signal, ViewChildren } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -56,10 +56,9 @@ import { localizePrice, unLocalizePrice } from '../../utils';
     DynamicListComponent,
     RouterModule,
     MatButtonModule,
-    CommonModule,
     MatIconModule,
     MatTooltipModule
-  ],
+],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
 })

@@ -2,6 +2,11 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.3.
 
+## Configuration
+
+If necessary adjust the configuration in [[frontend/src/environment]]. Use the specific environment file according to your build profile (`ng serve` uses development)
+
+
 ## Development server
 
 To start a local development server, run:
@@ -53,6 +58,51 @@ ng e2e
 ```
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Docker
+
+### Building Docker Image
+
+To build a Docker image for the frontend application, run:
+
+```bash
+docker build -t insy-frontend .
+```
+
+You can specify the build profile (development, test, production or deployment) using the `--build-arg` flag:
+
+```bash
+docker build --build-arg PROFILE=development -t insy-frontend:dev .
+docker build --build-arg PROFILE=test -t insy-frontend:test .
+docker build --build-arg PROFILE=production -t insy-frontend:prod .
+docker build --build-arg PROFILE=deployment -t insy-frontend:deploy .
+```
+
+The Dockerfile uses a multi-stage build process:
+- **Stage 1**: Builds the Angular application using Node.js
+- **Stage 2**: Serves the built application using Nginx on Alpine Linux
+
+### Running with Docker Compose
+
+To run the frontend application using Docker Compose, you'll need to set the following environment variables (copy the .env):
+
+- `APP_NAME`: The name of the application container
+- `CONFIG`: The configuration profile (test, production or deployment; dev images are not provided)
+- `APP_URL`: The domain URL for the application
+
+Then run:
+
+```bash
+docker-compose up -d
+```
+
+To stop the application:
+
+```bash
+docker-compose down
+```
+
+**Note**: The docker-compose configuration is set up for production deployments with Traefik as a reverse proxy and automatic SSL certificate management via Let's Encrypt.
 
 ## Additional Resources
 

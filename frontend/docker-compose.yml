@@ -1,16 +1,15 @@
 services:
   insy-frontend:
     container_name: "$APP_NAME"
-    image: "ghcr.io/kr1pt0n05/insy-frontend:${CONFIG}-latest"
+    image: "ghcr.io/kr1pt0n05/insy-frontend:${CONFIG}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.$APP_NAME.entrypoints=websecure"
-      - "traefik.http.routers.$APP_NAME.rule=Host($APP_URL)"
+      - "traefik.http.routers.$APP_NAME.rule=Host(`$APP_URL`)"
       - "traefik.http.routers.$APP_NAME.tls.certresolver=letsencrypt"
       - "traefik.http.services.$APP_NAME.loadbalancer.server.port=80"
     networks:
       - traefik
-
 
 networks:
   traefik:
