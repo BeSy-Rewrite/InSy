@@ -6,6 +6,8 @@ name: Build, docker & push to github packages
 on:
   push:
     branches: ["main", "test", "backend", "frontend"]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
   pull_request:
     branches: ["main", "test", "backend", "frontend"]
   workflow_dispatch:
