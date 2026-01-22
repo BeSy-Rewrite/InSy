@@ -3,6 +3,11 @@ export const environment = {
     apiUrl: 'http://localhost:8080',
     besyUrl: 'http://localhost:4201',
 
+    footerLinks: [
+        { name: 'BeSy', link: 'http://localhost:4201' },
+    ],
+    bugReportUrl: 'https://github.com/kr1pt0n05/Inventarisierungsmodul/issues/new/choose',
+
     /**
      * Regular expression for validating price input formats.
      *
