@@ -1,1 +1,1 @@
-export const build = { version: 'main-20260122-1b2d6f1', commitUrl: 'https://github.com/kr1pt0n05/Inventarisierungsmodul/commit/1b2d6f18433656aa581e3aa164236b92254b0b1d' };
+export const build = { version: 'main-20260122-09a3a48', commitUrl: 'https://github.com/kr1pt0n05/Inventarisierungsmodul/commit/09a3a4853ecd2a278911372093fac53de887d674' };
