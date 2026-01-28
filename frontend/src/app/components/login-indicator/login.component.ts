@@ -40,7 +40,17 @@ export class LoginComponent {
    * @returns {string} - The initials of the user, or '?' if the username is not available.
    */
   getUserInitials(): string {
-    return this.authService.getUsername()?.match(/\b(\w)/g)?.join('').toUpperCase() ?? '?';
+    const username = this.authService.getUsername();
+    if (!username) return '?';
+
+    // Match Unicode letters that are preceded by a non-letter or start of string
+    const initials = username.match(/(?:^|[^\p{L}])(\p{L})/gu);
+    return initials
+      ? initials
+        .map(match => match.replaceAll(/[^\p{L}]/gu, ''))
+        .join('')
+        .toUpperCase()
+      : '?';
   }
 
   onClick() {
