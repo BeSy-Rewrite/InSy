@@ -82,9 +82,8 @@ jobs:
           else
             git add frontend/src/environments/version.ts
             git commit -m "chore: Update version to ${VERSION}" -m "[skip ci]"
-            git push origin HEAD || {
+            git push origin ${{ github.ref_name }} || {
               echo "Failed to push version update to repository"
-              exit 1
             }
             echo "Version committed and pushed to repository"
           fi
