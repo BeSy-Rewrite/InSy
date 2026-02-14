@@ -20,7 +20,7 @@ import { DefaultGuardService } from './services/default-guard.service';
 
 export const routes: Routes = [
   {
-    title: 'Login',
+    title: 'InSy Login',
     path: '',
     component: LoginPageComponent,
   },
