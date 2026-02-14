@@ -10,13 +10,13 @@ import { InventoryItem } from "./models/inventory-item";
  */
 export function localizePrice(price: number | string): string {
     let numPrice: number;
-    if (typeof price !== 'number') {
-        if (price === '' || isNaN(parseFloat(price))) {
+    if (typeof price === 'number') {
+        numPrice = price;
+    } else {
+        if (price === '' || Number.isNaN(Number.parseFloat(price))) {
             return '';
         }
-        numPrice = parseFloat(price);
-    } else {
-        numPrice = price;
+        numPrice = Number.parseFloat(price);
     }
     return numPrice.toLocaleString('de-DE', { minimumFractionDigits: 2 }).concat('\xa0€').trim();
 }
@@ -25,16 +25,24 @@ export function localizePrice(price: number | string): string {
  * Converts a localized price string back to a numeric value.
  * Handles both dot and comma as decimal and thousands separators.
  * Removes any Euro symbol and whitespace.
+ * If the input is already a number, it returns it directly. If the input is invalid, it returns 0.
  *
- * @param price - The localized price string (e.g., "12,34 €").
+ * @param priceInput - The localized price string (e.g., "12,34 €").
  * @returns The numeric price value.
  */
-export function unLocalizePrice(price: string): number {
-    price = price.replace('€', '').trim();
-    // Remove thousand separators (either '.' or ',') that are followed by exactly three digits
-    price = price.replace(/([.,])(?=\d{3})/g, '');
+export function unLocalizePrice(priceInput: string | number): number {
+    if (typeof priceInput === 'string') {
+        priceInput = priceInput.replace('€', '').trim();
+        // Remove thousand separators (either '.' or ',') that are followed by exactly three digits
+        priceInput = priceInput.replaceAll(/([.,])(?=\d{3})/g, '');
 
-    return parseFloat(String(price).replace(',', '.'));
+        const price = Number.parseFloat(String(priceInput).replace(',', '.'));
+        return Number.isNaN(price) ? 0 : price;
+    } else if (typeof priceInput === 'number') {
+        return priceInput;
+    } else {
+        return 0;
+    }
 }
 
 /**
