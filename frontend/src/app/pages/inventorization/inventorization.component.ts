@@ -1,4 +1,4 @@
-import { Component, inject, input, model, output, signal, viewChild, WritableSignal } from '@angular/core';
+import { Component, inject, input, model, OnChanges, output, signal, viewChild, WritableSignal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -19,7 +19,7 @@ import { TagsEditorComponent } from "../../components/tags-editor/tags-editor.co
 import { Article } from '../../models/Article';
 import { Comment } from '../../models/comment';
 import { InventoryItem, inventoryItemDisplayNames } from '../../models/inventory-item';
-import { ArticleId, fixSingleArticleString } from '../../models/Order';
+import { ArticleId, ORDER_ID_ARTICLE_ID_SEPARATOR } from '../../models/Order';
 import { Tag } from '../../models/tag';
 import { InventoriesService } from '../../services/inventories.service';
 import { OrderService } from '../../services/order.service';
@@ -116,7 +116,7 @@ import { inventoryItemFromArticle } from '../../utils';
   templateUrl: './inventorization.component.html',
   styleUrl: './inventorization.component.css'
 })
-export class InventorizationComponent {
+export class InventorizationComponent implements OnChanges {
   /**
    * Input signal indicating whether a new inventory item is being inventorized.
    * Defaults to false, meaning the component is in edit mode for an existing item.
@@ -132,7 +132,7 @@ export class InventorizationComponent {
   /**
    * Output event emitter, triggered when inventorization is saved.
    */
-  onInventorization = output<InventoryItem>();
+  inventorizationSaved = output<InventoryItem>();
 
 
   /**
@@ -184,14 +184,18 @@ export class InventorizationComponent {
     route: ActivatedRoute,
     public dialog: MatDialog) {
     route.queryParams.subscribe(val => {
-      if (val['extensionArticles']) {
-        this.extensionArticles.set(fixSingleArticleString([...val['extensionArticles']]));
+      const extensionArticlesParam = val['extensionArticles'];
+      if (extensionArticlesParam) {
+        const extensionArticlesArray = typeof extensionArticlesParam === 'string' ? [extensionArticlesParam] : [...extensionArticlesParam];
+        this.extensionArticles.set(extensionArticlesArray);
       } else {
         this.extensionArticles.set([]);
       }
 
-      if (val['itemArticles']) {
-        this.itemArticles.set(fixSingleArticleString([...val['itemArticles']]));
+      const itemArticlesParam = val['itemArticles'];
+      if (itemArticlesParam) {
+        const itemArticlesArray = typeof itemArticlesParam === 'string' ? [itemArticlesParam] : [...itemArticlesParam];
+        this.itemArticles.set(itemArticlesArray);
       } else {
         this.itemArticles.set([]);
       }
@@ -217,12 +221,12 @@ export class InventorizationComponent {
     this.editableInventoryItem.set({ ...this.inventoryItem() });
     this.tags.set(this.editableInventoryItem().tags ?? []);
 
-    if (!this.isNew()) {
-      this.disabledInputs.set(['id', 'created_at']);
-      this._fetchComments(this.editableInventoryItem().id);
-    } else {
+    if (this.isNew()) {
       this.disabledInputs.set(['created_at']);
       this._resetComments();
+    } else {
+      this.disabledInputs.set(['id', 'created_at']);
+      this._fetchComments(this.editableInventoryItem().id);
     }
 
     this.tagsService.getTags().subscribe({
@@ -518,7 +522,7 @@ export class InventorizationComponent {
       finalize(() => {
         inventoryItem.tags = this.tags();
         this.editableInventoryItem.set(inventoryItem);
-        this.onInventorization.emit(inventoryItem);
+        this.inventorizationSaved.emit(inventoryItem);
         this._redirectOnInventorization(inventoryItem);
       })
     ).subscribe();
@@ -604,8 +608,7 @@ export class InventorizationComponent {
    * @private
    */
   private _setArticleAsInventoryItem(articleStrings: WritableSignal<string[]>) {
-    [this.currentArticleId.orderId, this.currentArticleId.articleId] = articleStrings()[0].split(',').map(Number);
-
+    [this.currentArticleId.orderId, this.currentArticleId.articleId] = articleStrings()[0].split(ORDER_ID_ARTICLE_ID_SEPARATOR).map(Number);
     forkJoin({
       order: this.orderService.getOrderById(this.currentArticleId.orderId),
       article: this.orderService.getOrderArticleByIds(this.currentArticleId.orderId, this.currentArticleId.articleId)
