@@ -1,4 +1,4 @@
-import { Component, input, model, signal, WritableSignal } from '@angular/core';
+import { Component, input, model, OnChanges, OnInit, signal, WritableSignal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,7 +15,7 @@ import { ItemEditorComponent } from '../../components/item-editor/item-editor.co
 import { Article } from '../../models/Article';
 import { Extension, extensionDisplayNames, extensionItemFromArticle } from '../../models/extension';
 import { InventoryItem, inventoryItemDisplayNames } from '../../models/inventory-item';
-import { ArticleId, fixSingleArticleString } from '../../models/Order';
+import { ArticleId, ORDER_ID_ARTICLE_ID_SEPARATOR } from '../../models/Order';
 import { InventoriesService } from '../../services/inventories.service';
 import { OrderService } from '../../services/order.service';
 import { localizePrice } from '../../utils';
@@ -36,7 +36,7 @@ import { localizePrice } from '../../utils';
   templateUrl: './extension-inventorization.component.html',
   styleUrl: './extension-inventorization.component.css'
 })
-export class ExtensionInventorizationComponent {
+export class ExtensionInventorizationComponent implements OnInit, OnChanges {
   /**
    * Indicates if the editor is in "new extension" mode.
    */
@@ -105,14 +105,18 @@ export class ExtensionInventorizationComponent {
     private readonly _snackBar: MatSnackBar) {
     // Handles query params for extensionArticles and inventoryId, and triggers article loading if needed.
     route.queryParams.subscribe(val => {
-      if (val['extensionArticles']) {
-        this.extensionArticles.set(fixSingleArticleString([...val['extensionArticles']]));
+
+      const extensionArticlesParam = val['extensionArticles'];
+      if (extensionArticlesParam) {
+        const extensionArticlesArray = typeof extensionArticlesParam === 'string' ? [extensionArticlesParam] : [...extensionArticlesParam];
+        this.extensionArticles.set(extensionArticlesArray);
       } else {
         this.extensionArticles.set([]);
       }
 
-      if (val['inventoryId']) {
-        this.inventoryId.set(Number(val['inventoryId']));
+      const inventoryIdParam = val['inventoryId'];
+      if (inventoryIdParam) {
+        this.inventoryId.set(Number(inventoryIdParam));
       } else {
         this.inventoryId.set(undefined);
       }
@@ -191,7 +195,7 @@ export class ExtensionInventorizationComponent {
             }
             this._saveNewExtension(currentId);
           },
-          error: (error) => {
+          error: () => {
             this._saveNewExtension(currentId);
           }
         });
@@ -223,7 +227,7 @@ export class ExtensionInventorizationComponent {
 
   private _saveNewExtension(currentId: number) {
     this.inventoriesService.addExtensionToId(currentId, this.editableExtension()).subscribe({
-      next: (extension) => {
+      next: () => {
         this._notify('Erweiterung erfolgreich hinzugefügt', 'success');
         if (this.currentArticleId.orderId !== undefined && this.currentArticleId.articleId !== undefined) {
           this._updateImportedArticle();
@@ -240,7 +244,7 @@ export class ExtensionInventorizationComponent {
     if (this.inventoryId() !== undefined) {
       this.changes.set({ ...this.changes(), inventory_id: this.inventoryId() });
       this.inventoriesService.updateExtension(this.inventoryId()!, this.editableExtension().id!, this.changes()).subscribe({
-        next: (extension) => {
+        next: () => {
           this._notify('Erweiterung erfolgreich aktualisiert', 'success');
           this._navigateOnInventorization();
         },
@@ -261,10 +265,10 @@ export class ExtensionInventorizationComponent {
   private _navigateOnInventorization() {
     if (this.extensionArticles().length > 0) {
       this.router.navigate(['/new-extension'], { queryParams: { inventoryId: this.inventoryId(), extensionArticles: [...this.extensionArticles()] } });
-    } else if (this.inventoryId() !== undefined) {
-      this.router.navigate(['/inventory/', this.inventoryId()]);
+    } else if (this.inventoryId() === undefined) {
+      this.router.navigate(['/orders']);
     } else {
-      this.router.navigate(['/orders'])
+      this.router.navigate(['/inventory/', this.inventoryId()]);
     }
   }
 
@@ -317,7 +321,7 @@ export class ExtensionInventorizationComponent {
    * @private
    */
   private _setArticleAsExtension(articleStrings: WritableSignal<string[]>) {
-    [this.currentArticleId.orderId, this.currentArticleId.articleId] = articleStrings()[0].split(',').map(Number);
+    [this.currentArticleId.orderId, this.currentArticleId.articleId] = articleStrings()[0].split(ORDER_ID_ARTICLE_ID_SEPARATOR).map(Number);
     this.orderService.getOrderArticleByIds(this.currentArticleId.orderId, this.currentArticleId.articleId).subscribe({
       next: (article) => {
         this.editableExtension.set(extensionItemFromArticle(article));
@@ -342,7 +346,7 @@ export class ExtensionInventorizationComponent {
       is_extension: true,
     } as Partial<Article>;
     this.orderService.updateOrderArticle(this.currentArticleId.orderId, this.currentArticleId.articleId, articleUpdates).subscribe({
-      next: (updatedArticle) => {
+      next: () => {
         console.log('Artikel erfolgreich aktualisiert');
       },
       error: (error) => {

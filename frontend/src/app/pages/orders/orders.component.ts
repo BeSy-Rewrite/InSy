@@ -13,7 +13,7 @@ import { AccordionComponent } from '../../components/accordion/accordion.compone
 import { CardComponent } from '../../components/card/card.component';
 import { DialogData, setupDialog } from '../../components/dialog/dialog.component';
 import { Article } from '../../models/Article';
-import { Order } from '../../models/Order';
+import { Order, ORDER_ID_ARTICLE_ID_SEPARATOR } from '../../models/Order';
 import { OrderService } from '../../services/order.service';
 
 @Component({
@@ -26,7 +26,7 @@ import { OrderService } from '../../services/order.service';
     MatTooltipModule,
     MatExpansionModule,
     MatIconModule
-],
+  ],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.css'
 })
@@ -41,7 +41,7 @@ export class OrdersComponent implements OnInit {
   orders: Order[] = [];
   numberOfArticles = () => {
     return this.orders.flatMap(order => order.articles).length;
-  }
+  };
   checkedArticles: Article[] = [];
 
   // get all active orders
@@ -56,7 +56,7 @@ export class OrdersComponent implements OnInit {
           ...article,
           checked: false
         }))
-      }))
+      }));
 
       this.orders.forEach(order => {
         order.articles = order.articles.filter(article => !article.is_inventoried);
@@ -76,13 +76,13 @@ export class OrdersComponent implements OnInit {
   openAllAccordion() {
     this.accordions.map((accordion: AccordionComponent) => {
       accordion.matAccordion.openAll();
-    })
+    });
   }
 
   closeAllAccordions() {
     this.accordions.map((accordion: AccordionComponent) => {
       accordion.matAccordion.closeAll();
-    })
+    });
   }
 
   // This will stop the Accordion from expanding when the checkbox is clicked
@@ -104,7 +104,7 @@ export class OrdersComponent implements OnInit {
   // tracks how many articles are checked
   checkedCount = () => {
     return this.orders.flatMap(order => order.articles).filter(article => article.checked).length;
-  }
+  };
 
   // "Alle auswählen" checkbox
   allChecked = false;
@@ -117,8 +117,8 @@ export class OrdersComponent implements OnInit {
         if (!article.checked) {
           allChecked = false;
         }
-      })
-    })
+      });
+    });
     this.checkedCount();
     return allChecked;
   }
@@ -132,8 +132,8 @@ export class OrdersComponent implements OnInit {
         if (article.checked && !this.checkedArticles.includes(article)) {
           this.checkedArticles.push(article);
         }
-      })
-    })
+      });
+    });
     this.checkedCount();
   }
 
@@ -166,8 +166,8 @@ export class OrdersComponent implements OnInit {
     return order ? order.id : -1;
   }
 
-  private collectArticles(articles: Article[]): number[][] {
-    return articles.map(article => [this.getArticleOrderId(article), article.article_id]);
+  private collectArticles(articles: Article[]): string[] {
+    return articles.map(article => `${this.getArticleOrderId(article)}${ORDER_ID_ARTICLE_ID_SEPARATOR}${article.article_id}`);
   }
 
   /**
@@ -182,8 +182,8 @@ export class OrdersComponent implements OnInit {
       return;
     }
 
-    let itemArticles: number[][] = [];
-    let extensionArticles: number[][] = [];
+    let itemArticles: string[] = [];
+    let extensionArticles: string[] = [];
     let route: string[] = [];
 
     switch (mode) {
