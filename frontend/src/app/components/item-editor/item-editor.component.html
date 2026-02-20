@@ -4,6 +4,9 @@
         <mat-label>{{itemColumns().get(field)}}</mat-label>
         <input matInput formControlName="{{field}}" [matAutocomplete]="auto" [placeholder]="initialValues[field]"
             [required]="requiredInputs().includes(field)" />
+        @if (field === 'price') {
+        <mat-hint>Es wird Bruttopreis verlangt.</mat-hint>
+        }
         <mat-error>
             @if (formGroup.get(field)?.hasError('required')) {
             {{itemColumns().get(field)}} ist erforderlich.

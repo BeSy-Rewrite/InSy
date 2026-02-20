@@ -32,7 +32,7 @@ interface ExtensionInternal {
 export const extensionDisplayNames: Map<string, string> = new Map([
   ['description', 'Erweiterungstyp'],
   ['company', 'Bestellt bei'],
-  ['price', 'Preis'],
+  ['price', 'Bruttopreis'],
   // ['cost_center', 'Kostenstelle'],
   ['serial_number', 'Seriennummer'],
   // ['orderer', 'Hinzugefügt von'],

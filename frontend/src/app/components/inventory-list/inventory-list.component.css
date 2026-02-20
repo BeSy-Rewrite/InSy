@@ -5,3 +5,7 @@ tr:nth-child(2n) {
 tr:hover {
   background-color: #bfbfbf;
 }
+
+th.mat-mdc-header-cell {
+  background-color: white;
+}
