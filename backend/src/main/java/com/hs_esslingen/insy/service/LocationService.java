@@ -23,6 +23,7 @@ public class LocationService {
      */
     public LocationDTO getAllLocations() {
         Set<String> locations = inventoryRepository.findAllLocations();
+        locations = locations != null ? locations : Set.of(); // Handle null case for locations
 
         return LocationDTO.builder()
                 .locations(locations)
