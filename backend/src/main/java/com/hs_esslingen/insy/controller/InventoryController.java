@@ -51,7 +51,7 @@ public class InventoryController {
             @RequestParam(name = "createdAfter", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdAfter,
             @RequestParam(name = "createdBefore", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdBefore,
             @RequestParam(name = "orderBy", required = false, defaultValue = "id") String orderBy,
-            @RequestParam(name = "direction", required = false, defaultValue = "asc") String direction,
+            @RequestParam(name = "direction", required = false, defaultValue = "desc") String direction,
             @RequestParam(name = "searchText", required = false) String searchText,
             @PageableDefault(size = 50) Pageable pageable) {
 
