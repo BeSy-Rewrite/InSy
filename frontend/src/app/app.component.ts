@@ -4,6 +4,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterOutlet } from '@angular/router';
+import { environment } from '../environments/environment';
 import { FooterComponent } from './components/footer/footer.component';
 import { HomebarComponent } from "./components/homebar/homebar.component";
 
@@ -23,5 +24,5 @@ import { HomebarComponent } from "./components/homebar/homebar.component";
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-
+  protected readonly environment = environment;
 }
