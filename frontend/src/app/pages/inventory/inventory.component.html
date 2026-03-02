@@ -150,10 +150,10 @@
 
 
   <!-- Content Section START -->
-  <div title="Inventargegenstände" class="w-full sticky-headers rounded shadow-sm bg-white px-6 py-6"
+  <div title="Inventargegenstände" class="w-full sticky-headers"
     [class.expanded]="!isFiltersVisible()"
     [class.collapsed]="isFiltersVisible()">
-    <div card-content class="h-full w-full">
+    <div class="rounded shadow-sm bg-white px-6 py-6 flex max-h-full w-full">
       <app-inventory-list (onClickItem)="navigateToDetailpageOf($event)" />
     </div>
   </div>
