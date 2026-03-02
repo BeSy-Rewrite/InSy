@@ -130,7 +130,7 @@ export class ServerTableDataSourceService<T> extends DataSource<T> {
     this._data = new BehaviorSubject<InventoryItem[]>([]);
     this._queryParams = new BehaviorSubject<QueryParams>({
       currentPage: { pageIndex: 0, pageSize: 10 },
-      currentSort: { active: 'id', direction: 'asc' },
+      currentSort: { active: 'id', direction: 'desc' },
       currentFilter: {},
       currentSearchText: '',
     });
