@@ -80,30 +80,30 @@ app-login-page {
 
   --content-height: calc(100vh - var(--homebar-height) - 3rem);
 
-  .sticky-headers {
-    height: var(--content-height) !important;
-    width: 100%;
-    display: inline-block;
+}
 
-    thead {
-      position: sticky;
-      align-self: flex-start;
-      top: 0;
-      z-index: 10;
-    }
+.sticky-headers {
+  height: var(--content-height) !important;
+  width: 100%;
+  display: inline-block;
+
+  thead {
+    position: sticky;
+    align-self: flex-start;
+    top: 0;
+    z-index: 10;
   }
+}
 
-  app-extension-inventorization .sticky-headers {
-    height: calc(var(--content-height) - 10rem) !important;
-  }
+app-extension-inventorization .sticky-headers {
+  height: calc(var(--content-height) - 10rem) !important;
+}
 
-  app-inventory .filter-menu-container {
-    height: var(--content-height) !important;
-  }
+app-inventory .filter-menu-container {
+  height: var(--content-height) !important;
+}
 
-  .mat-mdc-tab-body-content {
-    overflow: visible !important;
-    height: auto !important;
-  }
-
+.mat-mdc-tab-body-content {
+  overflow: visible !important;
+  height: auto !important;
 }

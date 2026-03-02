@@ -1,4 +1,4 @@
-<button mat-mini-fab color="primary" class="!fixed top-22.5 left-2.5 z-10"
+<button mat-mini-fab color="primary" class="fixed! top-22.5 left-2.5 z-10"
   (click)="isFiltersVisible.set(!isFiltersVisible())">
   @if (isFiltersVisible()) {
   <mat-icon>close</mat-icon>
@@ -150,11 +150,11 @@
 
 
   <!-- Content Section START -->
-  <div title="Inventargegenstände" class="w-full sticky-headers"
+  <div class="w-full sticky-headers"
     [class.expanded]="!isFiltersVisible()"
     [class.collapsed]="isFiltersVisible()">
     <div class="rounded shadow-sm bg-white px-6 py-6 flex max-h-full w-full">
-      <app-inventory-list (onClickItem)="navigateToDetailpageOf($event)" />
+      <app-inventory-list (onClickItem)="navigateToDetailpageOf($event)" class="w-full" />
     </div>
   </div>
   <!-- Content Section END -->
