@@ -23,6 +23,7 @@ public class SerialNumberService {
      */
     public SerialNumberDTO getAllSerialNumbers() {
         Set<String> serialNumbers = inventoryRepository.findAllSerialNumbers();
+        serialNumbers = serialNumbers != null ? serialNumbers : Set.of(); // Handle null case for serialNumbers
 
         return SerialNumberDTO.builder()
                 .serialNumbers(serialNumbers)

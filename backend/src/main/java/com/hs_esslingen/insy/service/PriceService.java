@@ -22,7 +22,9 @@ public class PriceService {
      */
     public PriceDTO getMaxAndMinPrice() {
         BigDecimal maxPrice = inventoryRepository.findMaxPrice();
+        maxPrice = maxPrice != null ? maxPrice : BigDecimal.ZERO; // Handle null case for maxPrice
         Integer minPrice = inventoryRepository.findMinPrice();
+        minPrice = minPrice != null ? minPrice : 0; // Handle null case for minPrice
 
         return PriceDTO.builder()
                 .maxPrice((int) Math.ceil(maxPrice.doubleValue()))

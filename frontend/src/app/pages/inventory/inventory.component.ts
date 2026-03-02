@@ -12,7 +12,6 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatAccordion, MatExpansionModule } from "@angular/material/expansion";
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { CardComponent } from '../../components/card/card.component';
 import { ChipV2Component } from '../../components/chip-v2/chip-v2.component';
 import { DatepickerComponent } from '../../components/datepicker/datepicker.component';
 import { InventoryListComponent } from '../../components/inventory-list/inventory-list.component';
@@ -69,7 +68,6 @@ export interface MinAndMaxPrice {
 @Component({
   selector: 'app-inventory',
   imports: [
-    CardComponent,
     RangeSliderComponent,
     DatepickerComponent,
     InventoryListComponent,

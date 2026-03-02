@@ -1,21 +1,22 @@
 package com.hs_esslingen.insy;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.hs_esslingen.insy.dto.CommentDTO;
@@ -27,6 +28,7 @@ import com.hs_esslingen.insy.model.User;
 import com.hs_esslingen.insy.repository.CommentRepository;
 import com.hs_esslingen.insy.repository.InventoryRepository;
 import com.hs_esslingen.insy.service.CommentService;
+import com.hs_esslingen.insy.service.UserService;
 
 class CommentServiceTest {
 
@@ -39,11 +41,14 @@ class CommentServiceTest {
     @Mock
     private InventoryRepository inventoryRepository;
 
+    @Mock
+    private UserService userService;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-    
+
     @Test
     void testGetCommentsByInventoryId_success() {
         // Setup - User und Inventory initialisieren
@@ -65,7 +70,7 @@ class CommentServiceTest {
 
         // Test ausführen
         List<CommentDTO> result = commentService.getCommentsByInventoryId(1);
-        
+
         // Assertions
         assertEquals(1, result.size());
         assertEquals("Test comment", result.get(0).getDescription());
@@ -88,9 +93,10 @@ class CommentServiceTest {
         inventory.setId(1);
         inventory.setUser(user); // User im Inventory setzen
 
-        //  CommentDTO initialisieren
+        // CommentDTO initialisieren
         CommentDTO commentDTO = CommentDTO.builder()
                 .description("Neuer Kommentar")
+                .author("Lisa Testerin")
                 .build();
 
         // Gemockter gespeicherter Comment
@@ -103,6 +109,7 @@ class CommentServiceTest {
 
         // Repository-Mocks
         when(inventoryRepository.findById(1)).thenReturn(Optional.of(inventory));
+        when(userService.resolveUser("Lisa Testerin")).thenReturn(user);
         when(commentRepository.save(any(Comment.class))).thenReturn(savedComment);
 
         // Test ausführen
@@ -113,7 +120,7 @@ class CommentServiceTest {
         assertEquals("Lisa Testerin", result.getAuthor());
         assertNotNull(result.getCreatedAt());
         assertEquals(42, result.getId());
-        
+
         // Verify dass das Repository aufgerufen wurde
         verify(commentRepository, times(1)).save(any(Comment.class));
         verify(inventoryRepository, times(1)).findById(1);

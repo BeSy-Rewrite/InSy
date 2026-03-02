@@ -26,5 +26,7 @@ export const environment = {
 
     // Inventory pages cache duration in milliseconds
     cacheDurationMs: 5 * 60 * 1000, // 5 minutes
-    searchAndFilterDebounceMs: 100 // Debounce time for search and filter inputs in milliseconds
+    searchAndFilterDebounceMs: 100, // Debounce time for search and filter inputs in milliseconds
+
+    showFooter: true
 };
