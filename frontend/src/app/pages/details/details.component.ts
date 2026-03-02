@@ -58,7 +58,7 @@ import { localizePrice, unLocalizePrice } from '../../utils';
     MatButtonModule,
     MatIconModule,
     MatTooltipModule
-],
+  ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
 })
@@ -221,7 +221,7 @@ export class DetailsComponent implements OnChanges {
 // Defines the table and column display names for the change history entries
 const changesColumnNames = new Map<string, string>([
   ['location', 'Standort/Nutzer:in'],
-  ['price', 'Preis'],
+  ['price', 'Preis (brutto)'],
   ['company', 'Firma'],
   ['description', 'Beschreibung'],
   ['serialNumber', 'Seriennummer'],

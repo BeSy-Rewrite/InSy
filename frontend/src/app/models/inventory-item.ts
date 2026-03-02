@@ -23,7 +23,7 @@ export const inventoryItemDisplayNames: Map<string, string> = new Map([
   ['id', 'Inventarnummer'],
   ['description', 'Geräte-/Softwaretyp'],
   ['company', 'Firma'],
-  ['price', 'Preis'],
+  ['price', 'Preis (brutto)'],
   ['created_at', 'Inventarisiert am'],
   ['serial_number', 'Seriennummer'],
   ['location', 'Standort/Nutzer:in'],
