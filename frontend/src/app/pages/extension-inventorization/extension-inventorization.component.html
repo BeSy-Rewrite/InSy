@@ -65,7 +65,7 @@
     } @else {
     <!-- Inventory Selection Section -->
     <app-card title="Inventargegenstand auswählen">
-        <div card-content class="mt-4">
+        <div card-content class="mt-4 sticky-headers">
             <app-inventory-list (onClickItem)="onSelectInventory($event)" [showDownloadButton]="false" />
         </div>
     </app-card>

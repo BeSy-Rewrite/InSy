@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, inject, input, output, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from "@angular/material/divider";
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -72,6 +73,7 @@ import { ServerTableDataSourceService } from '../../services/server-table-data-s
     ReactiveFormsModule,
     MatButtonModule,
     MatTooltip,
+    MatDividerModule
   ],
   templateUrl: './inventory-list.component.html',
   styleUrl: './inventory-list.component.css'

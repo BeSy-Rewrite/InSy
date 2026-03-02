@@ -1,4 +1,4 @@
-<div class="w-full">
+<div class="w-full h-full flex flex-col">
 
   <div class="flex justify-between items-center">
     <!-- Mat Form Field for searching inventory items -->
@@ -18,7 +18,7 @@
 
   <!-- Inventory Table -->
   <!-- Mat Table to display inventory items with dynamic columns, pagination, and sorting -->
-  <div class="overflow-x-auto w-full">
+  <div class="overflow-x-auto w-full flex-1">
     <table mat-table [dataSource]="inventoryItems" matSort>
 
 
@@ -87,16 +87,20 @@
 
       <!-- Table Row Definitions -->
       <!-- Header row with columns defined in `displayedColumns` array, includes sorting functionality -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true"
+        class="bg-he-darkblue-100! text-he-darkblue! font-semibold!">
+      </tr>
       <!-- Data rows displaying the inventory item details, corresponding to the defined columns -->
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
     </table>
   </div>
 
+  <mat-divider class="h-0.5! bg-he-darkblue-400" />
   <!-- Paginator -->
   <!-- MatPaginator for handling pagination, displaying page size options and first/last page buttons -->
-  <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons aria-label="Wähle Seite der Inventarliste">
+  <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons aria-label="Wähle Seite der Inventarliste"
+    class="bg-he-darkblue-100! text-he-darkblue!">
   </mat-paginator>
 
 </div>

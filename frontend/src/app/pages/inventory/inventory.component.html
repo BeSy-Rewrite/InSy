@@ -8,151 +8,154 @@
 </button>
 
 
-<div class="md:flex md:flex-row relative">
+<div class="flex flex-row">
 
   <!-- Filter Section START -->
-  <div [class.open]="isFiltersVisible()" [class.closed]="!isFiltersVisible()" class="md:w-96">
+  <div [class.open]="isFiltersVisible()" [class.closed]="!isFiltersVisible()" class="relative">
 
-    <div class="flex flex-col gap-2 w-96 min-w-96 mt-6">
+    <div class="p-2 filter-menu-container overflow-y-auto w-100">
+      <div class="flex flex-col gap-2 w-full">
 
-
-      <!-- Filter Action Buttons -->
-      <div class="flex flex-row justify-between">
-        <div class="flex flex-row gap-2">
-          <button mat-button (click)="accordion().openAll()">Alles&nbsp;ausklappen</button>
-          <button mat-button (click)="accordion().closeAll()">Alles&nbsp;einklappen</button>
+        <!-- Filter Action Buttons -->
+        <div class="flex flex-row justify-between">
+          <div class="flex flex-row gap-2">
+            <button mat-button (click)="accordion().openAll()">Alles&nbsp;ausklappen</button>
+            <button mat-button (click)="accordion().closeAll()">Alles&nbsp;einklappen</button>
+          </div>
+          <button mat-button color="warn" (click)="resetFilters()">Reset</button>
         </div>
-        <button mat-button color="warn" (click)="resetFilters()">Reset</button>
+
+        <mat-divider class="bg-gray-500" />
+
+        <mat-accordion multi>
+          <!-- Accordion Sections -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-semibold text-base">
+                Inventarnummer
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-range-slider [minValue]="minAndMaxId.minId" [maxValue]="minAndMaxId.maxId"
+              [controlMin]="$any(inventoryForm).get('minId')" [controlMax]="$any(inventoryForm).get('maxId')" />
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-semibold text-base">
+                Zeitraum
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-datepicker class="min-h-fit" [controlMin]="$any(inventoryForm).get('createdAfter')"
+              [controlMax]="$any(inventoryForm).get('createdBefore')" />
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-semibold text-base">
+                Firma
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-chip-v2 placeholder="Firma hinzufügen" heading="Firma" [options]="companies"
+              [control]="$any(inventoryForm).get('company')" />
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-semibold text-base">
+                Preis (brutto)
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-range-slider [minValue]="minAndMaxPrice.minPrice" [maxValue]="minAndMaxPrice.maxPrice"
+              [controlMin]="$any(inventoryForm).get('minPrice')" [controlMax]="$any(inventoryForm).get('maxPrice')" />
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-semibold text-base">
+                Seriennummer
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-chip-v2 placeholder="Seriennummer hinzufügen" heading="Seriennummer" [options]="serialNumbers"
+              [control]="$any(inventoryForm).get('serialNumber')" />
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-semibold text-base">
+                Standort/Nutzer:in
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-chip-v2 placeholder="Standort oder Nutzer hinzufügen" heading="Standort/Nutzer" [options]="locations"
+              [control]="$any(inventoryForm).get('location')" />
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-semibold text-base">
+                Bestellt von
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-chip-v2 placeholder="Besteller hinzufügen" heading="Besteller" [options]="orderers"
+              [control]="$any(inventoryForm).get('orderer')" />
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-semibold text-base">
+                Tags
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-chip-v2 placeholder="Tags hinzufügen" heading="Tags" [options]="tags"
+              [control]="$any(inventoryForm).get('tags')" [useTagColors]="true" />
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-semibold text-base">
+                Kostenstelle
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-chip-v2 placeholder="Kostenstelle hinzufügen" heading="Kostenstellen" [options]="costCenters"
+              [control]="$any(inventoryForm).get('costCenter')" />
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-semibold text-base">
+                Deinventarisiert
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-checkbox label="Deinventarisiert" (click)="checkDeinventoriedBox()"
+              (keydown)="checkDeinventoriedBox($event)" [checked]="showDeinventoried()">
+              Deinventarisiertes anzeigen
+            </mat-checkbox>
+          </mat-expansion-panel>
+        </mat-accordion>
       </div>
-
-      <mat-divider class="bg-gray-500" />
-
-      <mat-accordion multi>
-        <!-- Accordion Sections -->
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title class="font-semibold text-base">
-              Inventarnummer
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <app-range-slider [minValue]="minAndMaxId.minId" [maxValue]="minAndMaxId.maxId"
-            [controlMin]="$any(inventoryForm).get('minId')" [controlMax]="$any(inventoryForm).get('maxId')" />
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title class="font-semibold text-base">
-              Zeitraum
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <app-datepicker class="min-h-fit" [controlMin]="$any(inventoryForm).get('createdAfter')"
-            [controlMax]="$any(inventoryForm).get('createdBefore')" />
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title class="font-semibold text-base">
-              Firma
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <app-chip-v2 placeholder="Firma hinzufügen" heading="Firma" [options]="companies"
-            [control]="$any(inventoryForm).get('company')" />
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title class="font-semibold text-base">
-              Preis (brutto)
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <app-range-slider [minValue]="minAndMaxPrice.minPrice" [maxValue]="minAndMaxPrice.maxPrice"
-            [controlMin]="$any(inventoryForm).get('minPrice')" [controlMax]="$any(inventoryForm).get('maxPrice')" />
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title class="font-semibold text-base">
-              Seriennummer
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <app-chip-v2 placeholder="Seriennummer hinzufügen" heading="Seriennummer" [options]="serialNumbers"
-            [control]="$any(inventoryForm).get('serialNumber')" />
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title class="font-semibold text-base">
-              Standort/Nutzer:in
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <app-chip-v2 placeholder="Standort oder Nutzer hinzufügen" heading="Standort/Nutzer" [options]="locations"
-            [control]="$any(inventoryForm).get('location')" />
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title class="font-semibold text-base">
-              Bestellt von
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <app-chip-v2 placeholder="Besteller hinzufügen" heading="Besteller" [options]="orderers"
-            [control]="$any(inventoryForm).get('orderer')" />
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title class="font-semibold text-base">
-              Tags
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <app-chip-v2 placeholder="Tags hinzufügen" heading="Tags" [options]="tags"
-            [control]="$any(inventoryForm).get('tags')" [useTagColors]="true" />
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title class="font-semibold text-base">
-              Kostenstelle
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <app-chip-v2 placeholder="Kostenstelle hinzufügen" heading="Kostenstellen" [options]="costCenters"
-            [control]="$any(inventoryForm).get('costCenter')" />
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title class="font-semibold text-base">
-              Deinventarisiert
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <mat-checkbox label="Deinventarisiert" (click)="checkDeinventoriedBox()"
-            (keydown)="checkDeinventoriedBox($event)" [checked]="showDeinventoried()">
-            Deinventarisiertes anzeigen
-          </mat-checkbox>
-        </mat-expansion-panel>
-      </mat-accordion>
     </div>
-
+    <div class="absolute top-0 left-0 right-0 bottom-0 scroll-shadow pointer-events-none">
+    </div>
+    <!-- Filter Section END -->
   </div>
-  <!-- Filter Section END -->
 
 
   <!-- Content Section START -->
-  <app-card title="Inventargegenstände" class="md:-ml-96 w-full" [class.expanded]="!isFiltersVisible()"
+  <div title="Inventargegenstände" class="w-full sticky-headers rounded shadow-sm bg-white px-6 py-6"
+    [class.expanded]="!isFiltersVisible()"
     [class.collapsed]="isFiltersVisible()">
-    <div card-content>
+    <div card-content class="h-full w-full">
       <app-inventory-list (onClickItem)="navigateToDetailpageOf($event)" />
     </div>
-  </app-card>
+  </div>
   <!-- Content Section END -->
 </div>
