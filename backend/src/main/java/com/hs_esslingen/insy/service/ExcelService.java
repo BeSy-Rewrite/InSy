@@ -270,7 +270,8 @@ public class ExcelService {
                 for (Row row : sheet) {
 
                     // Skip first row, since it contains headings
-                    if (row.getCell(0) == null || row.getRowNum() == 0 || row.getRowNum() == 1)
+                    if (row.getCell(1) == null || row.getRowNum() == 0
+                            || (row.getRowNum() == 1 && row.getCell(4).getStringCellValue().isEmpty()))
                         continue;
 
                     // Parse all values of excel files into one object
@@ -320,8 +321,7 @@ public class ExcelService {
 
         // Clean data set
         excelObjects = excelObjects.stream()
-                .filter(obj -> obj.getCostCenter() != null)
-                .filter(obj -> !obj.getCostCenter().contains("*"))
+                .filter(obj -> obj.getCostCenter() == null || !obj.getCostCenter().contains("*"))
                 .filter(obj -> obj.getInventoryNumber() != null)
                 .toList();
 
@@ -482,14 +482,23 @@ public class ExcelService {
      * @return the Double value of the cell, or null if the cell is blank or not a
      *         valid Double
      */
-    static Double getCellDoubleValue(Cell cell) {
+    static Double getCellDoubleValue(Cell cell) throws BadRequestException {
         if (cell == null || cell.getCellType() == CellType.BLANK)
             return null;
         switch (cell.getCellType()) {
             case NUMERIC:
                 return cell.getNumericCellValue();
             case STRING:
-                return Double.parseDouble(cell.getStringCellValue());
+                try {
+                    String cellValue = cell.getStringCellValue().replaceAll("\\s+", "").replace(",", ".");
+                    String decimalPart = cellValue.contains(".") ? cellValue.substring(cellValue.lastIndexOf(".") + 1)
+                            : "";
+                    cellValue = cellValue.substring(0, cellValue.lastIndexOf(".")).replace(".", "")
+                            .concat(decimalPart.isEmpty() ? "" : "." + decimalPart);
+                    return Double.parseDouble(cellValue);
+                } catch (Exception e) {
+                    throw new BadRequestException("Price must be a valid number!");
+                }
             default:
                 return null;
         }
@@ -526,6 +535,13 @@ public class ExcelService {
     static LocalDateTime getCellLocalDateValue(Cell cell) {
         if (cell == null || cell.getCellType() == CellType.BLANK)
             return null;
+        if (cell.getCellType() == CellType.STRING) {
+            try {
+                return LocalDate.parse(cell.getStringCellValue()).atStartOfDay();
+            } catch (Exception e) {
+                return null;
+            }
+        }
         return cell.getLocalDateTimeCellValue();
     }
 
