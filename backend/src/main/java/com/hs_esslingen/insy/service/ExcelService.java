@@ -162,20 +162,8 @@ public class ExcelService {
 
                 Cell date = row.createCell(6);
                 date.setCellStyle(dateCellStyle);
-                date.setCellValue(Date.from(inventory.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant())); // Convert
-                                                                                                                   // LocalDateTime
-                                                                                                                   // to
-                                                                                                                   // a
-                                                                                                                   // Date
-                                                                                                                   // to
-                                                                                                                   // properly
-                                                                                                                   // save
-                                                                                                                   // it
-                                                                                                                   // as
-                                                                                                                   // date
-                                                                                                                   // to
-                                                                                                                   // excel
-
+                date.setCellValue(Date.from(inventory.getCreatedAt().atZone(ZoneId.of("Europe/Berlin")).toInstant()));
+                // Convert LocalDateTime to a Date to properly save it as date to excel
                 row.createCell(7).setCellValue(inventory.getSerialNumber());
                 row.createCell(8).setCellValue(inventory.getLocation());
                 row.createCell(9).setCellValue(inventory.getUser() == null ? "" : inventory.getUser().getName());
@@ -412,7 +400,7 @@ public class ExcelService {
             inv.setIsDeinventoried(obj.isDeinventoried());
             inv.setPrice(BigDecimal.valueOf(obj.getPrice()));
             inv.setLocation(obj.getLocation());
-            inv.setCreatedAt(obj.getCreatedAt() == null ? LocalDateTime.now() : obj.getCreatedAt());
+            inv.setCreatedAt(obj.getCreatedAt() == null ? null : obj.getCreatedAt());
             inv.setSearchText(StringParser.fullTextSearchString(inv));
             inventory.put(obj.getInventoryNumber(), inv);
         });
