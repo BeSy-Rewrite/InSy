@@ -259,7 +259,7 @@ public class ExcelService {
 
                     // Skip first row, since it contains headings
                     if (row.getCell(1) == null || row.getRowNum() == 0
-                            || (row.getRowNum() == 1 && row.getCell(4).getStringCellValue().isEmpty()))
+                            || row.getRowNum() == 1)
                         continue;
 
                     // Parse all values of excel files into one object
@@ -285,7 +285,7 @@ public class ExcelService {
                             inv.setDescription(ExcelService.getCellStringValue(row.getCell(3)));
                             inv.setCompany(ExcelService.getCellStringValue(row.getCell(4)));
                             inv.setPrice(ExcelService.getCellDoubleValue(row.getCell(5)) == null ? 0.0
-                                    : ExcelService.getCellDoubleValue(row.getCell(5)));
+                                    : ExcelService.getCellDoubleValue(row.getCell(5)) / amount);
                             inv.setCreatedAt(ExcelService.getCellLocalDateValue(row.getCell(6)));
                             inv.setSerialNumber(ExcelService.getCellStringValue(row.getCell(7)));
                             inv.setLocation(ExcelService.getCellStringValue(row.getCell(8)));
@@ -435,9 +435,9 @@ public class ExcelService {
 
         switch (cell.getCellType()) {
             case STRING:
-                return cell.getStringCellValue();
+                return cell.getStringCellValue().trim();
             case NUMERIC:
-                return String.valueOf(cell.getNumericCellValue());
+                return String.valueOf(cell.getNumericCellValue()).trim();
             default:
                 return null;
         }
