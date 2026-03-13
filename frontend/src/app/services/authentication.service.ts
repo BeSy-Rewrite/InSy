@@ -94,6 +94,10 @@ export class AuthenticationService {
     return this.hasValidToken() && this.getRoles().includes(environment.requiredRole);
   }
 
+  isAdmin(): boolean {
+    return this.hasValidToken() && this.getRoles().includes(environment.adminRole);
+  }
+
   /**
    * Retrieves the roles of the authenticated user.
    *

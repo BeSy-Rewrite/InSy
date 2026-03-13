@@ -28,5 +28,6 @@ export const environment = {
     cacheDurationMs: 5 * 60 * 1000, // 5 minutes
     searchAndFilterDebounceMs: 100, // Debounce time for search and filter inputs in milliseconds
 
-    showFooter: false
+    showFooter: false,
+    adminRole: "admin"
 };

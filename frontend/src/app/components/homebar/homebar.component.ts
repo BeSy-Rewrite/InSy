@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router, RouterModule } from '@angular/router';
+import { AuthenticationService } from '../../services/authentication.service';
 import { LoginComponent } from "../login-indicator/login.component";
 import { NavbarButtonComponent } from '../navbar-button/navbar-button.component';
 
@@ -28,16 +29,19 @@ export class HomebarComponent {
     { name: 'Inventar', path: '/inventory' },
     { name: 'Bestellungen', path: '/orders' },
     { name: 'Neue Inventarisierung', path: '/new' },
-    { name: 'Neue Erweiterung', path: '/new-extension' },
-    { name: 'Import', path: '/import' }
+    { name: 'Neue Erweiterung', path: '/new-extension' }
   ];
 
-  constructor(public readonly router: Router) {
+  constructor(public readonly router: Router, authService: AuthenticationService) {
     router.events.subscribe(() => {
       this.activeMenuItem.set(
         this.links.findIndex(link => link.path === `/${router.parseUrl(router.url).root.children['primary']?.segments[0].path}`)
       );
     });
+
+    if (authService.isAdmin()) {
+      this.links.push({ name: 'Import', path: '/import' });
+    }
   }
 
 }
