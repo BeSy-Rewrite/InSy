@@ -126,7 +126,12 @@ public class ExcelService {
         List<Inventory> inventoryList = inventoryRepository.findAll(spec, Sort.by(Sort.Direction.ASC, "id"));
 
         Map<Integer, List<Inventory>> inventoriesByYear = inventoryList.stream()
-                .collect(Collectors.groupingBy(inv -> inv.getCreatedAt().getYear()));
+                .collect(Collectors.groupingBy(inv -> {
+                    LocalDateTime date = inv.getCreatedAt();
+                    if (date != null)
+                        return date.getYear();
+                    return 0;
+                }));
 
         // Deinventoried font style
         CellStyle deinventoriedStyle = wb.createCellStyle();
@@ -286,7 +291,13 @@ public class ExcelService {
                             inv.setCompany(ExcelService.getCellStringValue(row.getCell(4)));
                             inv.setPrice(ExcelService.getCellDoubleValue(row.getCell(5)) == null ? 0.0
                                     : ExcelService.getCellDoubleValue(row.getCell(5)) / amount);
-                            inv.setCreatedAt(ExcelService.getCellLocalDateValue(row.getCell(6)));
+                            LocalDateTime createdAt = ExcelService.getCellLocalDateValue(row.getCell(6));
+                            if (createdAt == null) {
+                                createdAt = LocalDateTime.of(Integer.parseInt(sheet.getSheetName()), 1, 1, 0, 0);
+                                inv.addComment(
+                                        "Kein Datums-Eintrag in der Excel. Datum aus Jahreszahl des Tabellenblatts erzeugt.");
+                            }
+                            inv.setCreatedAt(createdAt);
                             inv.setSerialNumber(ExcelService.getCellStringValue(row.getCell(7)));
                             inv.setLocation(ExcelService.getCellStringValue(row.getCell(8)));
                             inv.setOrderer(ExcelService.getCellStringValue(row.getCell(9)));
