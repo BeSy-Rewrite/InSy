@@ -1,0 +1,17 @@
+/* Scanner target visual effect - complex shadow that's difficult to replicate with pure Tailwind */
+.scanner-target-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.scanner-target-box {
+    border: 2px solid #16a34a;
+    border-radius: 0.5rem;
+    width: 75%;
+    aspect-ratio: 16 / 9;
+    box-shadow: 0 0 0 200vmax rgba(17, 24, 39, 0.22);
+}

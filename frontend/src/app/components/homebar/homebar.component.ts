@@ -29,7 +29,8 @@ export class HomebarComponent {
     { name: 'Inventar', path: '/inventory' },
     { name: 'Bestellungen', path: '/orders' },
     { name: 'Neue Inventarisierung', path: '/new' },
-    { name: 'Neue Erweiterung', path: '/new-extension' }
+    { name: 'Neue Erweiterung', path: '/new-extension' },
+    { name: 'Scanner', path: '/scan' },
   ];
 
   constructor(public readonly router: Router, authService: AuthenticationService) {
