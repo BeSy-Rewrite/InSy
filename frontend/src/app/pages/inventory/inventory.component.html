@@ -1,5 +1,5 @@
 <button mat-mini-fab color="primary" class="fixed! top-22.5 left-2.5 z-10"
-  (click)="isFiltersVisible.set(!isFiltersVisible())">
+  (click)="toggleFiltersVisibility()">
   @if (isFiltersVisible()) {
   <mat-icon>close</mat-icon>
   } @else {
@@ -8,12 +8,12 @@
 </button>
 
 
-<div class="flex flex-row">
+<div class="flex flex-col lg:flex-row">
 
   <!-- Filter Section START -->
   <div [class.open]="isFiltersVisible()" [class.closed]="!isFiltersVisible()" class="relative">
 
-    <div class="p-2 filter-menu-container overflow-y-auto w-100">
+    <div class="p-2 lg:filter-menu-container overflow-y-auto w-100">
       <div class="flex flex-col gap-2 w-full">
 
         <!-- Filter Action Buttons -->

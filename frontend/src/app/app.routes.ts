@@ -27,7 +27,7 @@ export const routes: Routes = [
   },
   {
     title: 'Space Sim',
-    path: 'really-the-homepage',
+    path: 'easter-egg',
     component: ReallyTheHomepageComponent,
   },
   {

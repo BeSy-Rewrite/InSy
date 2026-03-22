@@ -11,17 +11,36 @@
 .expanded {
     margin-left: -25rem;
     width: 100%;
-    transition:
-        margin-left 0.3s ease,
-        width 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .collapsed {
     margin-left: 1rem;
     width: calc(100% - 26rem);
-    transition:
-        margin-left 0.3s ease,
-        width 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+/* Mobile: slide from top instead of left */
+@media (max-width: 1023px) {
+    .open {
+        translate: 0 0;
+    }
+
+    .closed {
+        translate: 0 -36rem;
+    }
+
+    .expanded {
+        margin-left: 0;
+        margin-top: -34rem;
+        width: 100%;
+    }
+
+    .collapsed {
+        margin-left: 0;
+        margin-top: 1rem;
+        width: 100%;
+    }
 }
 
 .scroll-shadow {
