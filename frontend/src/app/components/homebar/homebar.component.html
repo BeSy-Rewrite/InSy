@@ -1,13 +1,14 @@
-<div class="homebar fixed top-0 left-0 w-full h-[var(--homebar-height)] z-[900] bg-he-darkblue flex items-center">
+<div class="homebar fixed top-0 left-0 right-0 h-[--homebar-height] z-900 bg-he-darkblue flex flex-row items-center">
 
-  <a class="flex min-w-fit items-center mx-8" routerLink="/">
-    <img class="h-16" src="images/heonline_logo-white-red.svg" alt="Logo der Hochschule Esslingen">
-    <img class="h-11" src="favicon.png" alt="Logo des InventarisierungsSystems">
+  <a class="flex min-w-fit items-center mx-4 sm:mx-8" routerLink="/">
+    <img class="hidden min-[512px]:block min-[512px]:h-12 sm:h-16" src="images/heonline_logo-white-red.svg"
+      alt="Logo der Hochschule Esslingen">
+    <img class="h-8 sm:h-11" src="favicon.png" alt="Logo des InventarisierungsSystems">
   </a>
 
-  <div class="-m-4 xl:hidden flex flex-row items-center align-baseline">
-    <button mat-icon-button class="!mb-1" [matMenuTriggerFor]="menu">
-      <mat-icon class="!text-he-grey">menu</mat-icon>
+  <div class="xl:hidden flex flex-row items-center align-baseline">
+    <button mat-icon-button class="mb-1!" [matMenuTriggerFor]="menu">
+      <mat-icon class="text-he-grey!">menu</mat-icon>
     </button>
 
     <a class="ml-2 h-fit text-he-grey text-lg"
@@ -29,7 +30,5 @@
     <app-navbar-button label="{{ link.name }}" routerLink="{{ link.path }}"
       [isExact]="link.path === '/'"></app-navbar-button>
     }
-  </nav>
-
-  <app-login class="mr-8 ml-auto"></app-login>
+  </nav> <app-login class="mr-4 sm:mr-8 ml-auto"></app-login>
 </div>
