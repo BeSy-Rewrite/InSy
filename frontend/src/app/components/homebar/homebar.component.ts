@@ -25,12 +25,12 @@ export class HomebarComponent {
   activeMenuItem = signal(0);
 
   links = [
-    { name: 'Startseite', path: '/home' },
     { name: 'Inventar', path: '/inventory' },
     { name: 'Bestellungen', path: '/orders' },
     { name: 'Neue Inventarisierung', path: '/new' },
     { name: 'Neue Erweiterung', path: '/new-extension' },
     { name: 'Scanner', path: '/scan' },
+    { name: 'Statistiken', path: '/statistics' },
   ];
 
   constructor(public readonly router: Router, authService: AuthenticationService) {

@@ -32,7 +32,7 @@ export const routes: Routes = [
   },
   {
     title: 'InSy',
-    path: 'home',
+    path: 'statistics',
     component: StatisticsComponent,
     canActivate: [DefaultGuardService],
   },
