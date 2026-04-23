@@ -152,7 +152,7 @@ export class InventoryComponent implements OnInit {
       orderer: new FormControl([]),
       tags: new FormControl([]),
       isDeinventoried: new FormControl(this.showDeinventoried()),
-    })
+    });
 
     // Assigning the form group as the filter for the server data sourc
     this.serverTableDataSource.filter = this.inventoryForm;
@@ -198,5 +198,13 @@ export class InventoryComponent implements OnInit {
       isDeinventoried: this.showDeinventoried(),
     });
     this.rangeSliders.forEach(slider => slider.resetSlider());
+  }
+
+  toggleFiltersVisibility() {
+    this.isFiltersVisible.set(!this.isFiltersVisible());
+    // if on mobile, also close the accordion when hiding filters
+    if (window.innerWidth < 1024 && !this.isFiltersVisible()) {
+      this.accordion().closeAll();
+    }
   }
 }

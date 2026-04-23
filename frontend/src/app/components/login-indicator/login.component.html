@@ -8,7 +8,7 @@
     </button>
     @if (authService.hasValidToken()) {
     <button
-        class="flex items-center justify-center ml-4 px-1 pb-0.5 h-12 w-fit min-w-12 rounded-full bg-he-grey text-he-darkblue text-xl font-semibold"
+        class="flex items-center justify-center ml-4 px-1 pb-0.5 h8 sm:h-12 w-fit min-w-12 rounded-full bg-he-grey text-he-darkblue text-xl font-semibold"
         [matTooltip]="'Angemeldet als \'' + authService.getUsername() + '\''" (click)="onClick()">
         {{getUserInitials()}}
     </button>

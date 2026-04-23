@@ -1,0 +1,93 @@
+<app-card title="Barcode Scanner" class="max-w-xl block mx-auto">
+    <div card-content class="space-y-4">
+        @if (!scannedItem) {
+        <p class="text-gray-700">
+            Starte den Scanner und halte den Barcode in die Mitte des Kamerabilds.
+        </p>
+
+        @if (!hasScannerSupport) {
+        <div class="bg-yellow-100 border border-yellow-300 text-yellow-900 rounded-lg px-4 py-3 text-sm">
+            Dieser Browser unterstuetzt Barcode-Erkennung nicht.
+        </div>
+        }
+
+        @if (cameraError) {
+        <div class="bg-red-100 border border-red-300 text-red-900 rounded-lg px-4 py-3 text-sm">
+            {{ cameraError }}
+        </div>
+        }
+
+        <div
+            class="relative w-full aspect-video border-2 border-gray-300 rounded-xl overflow-hidden bg-linear-to-br from-gray-100 to-gray-200">
+            <video #videoElement class="w-full h-full object-cover" playsinline muted></video>
+            @if (isScanning) {
+            <div class="scanner-target-overlay">
+                <div class="scanner-target-box"></div>
+            </div>
+            }
+        </div>
+
+        <div class="flex gap-2 justify-end">
+            @if (isScanning) {
+            <button mat-button (click)="stopScanner()">Stoppen</button>
+            }
+            <button mat-raised-button color="primary" (click)="startScanner()"
+                [disabled]="isScanning || !hasScannerSupport">
+                Scannen
+            </button>
+        </div>
+
+        @if (lastScannedValue && !isLoadingItem) {
+        <div class="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-50">
+            <p class="text-xs text-gray-600 m-0">Gefundener Code</p>
+            <p class="text-lg font-bold text-gray-900 m-0 mt-2 wrap-break-word">{{ lastScannedValue }}</p>
+            @if (lastScannedFormat) {
+            <p class="text-sm text-gray-700 m-0 mt-1">Format: {{ lastScannedFormat }}</p>
+            }
+        </div>
+        }
+
+        @if (isLoadingItem) {
+        <div class="w-full border border-blue-300 rounded-lg px-4 py-4 bg-blue-50 text-center">
+            <p class="text-sm text-blue-900 font-medium m-0">Lade Inventaritem...</p>
+        </div>
+        }
+
+        @if (itemLoadError) {
+        <div class="bg-red-100 border border-red-300 text-red-900 rounded-lg px-4 py-3 text-sm">
+            {{ itemLoadError }}
+        </div>
+        }
+        }
+
+        @if (scannedItem) {
+        <h2 class="text-2xl font-bold text-gray-900">Gefundenes Item</h2>
+
+        <div class="w-full border border-gray-300 rounded-lg p-4 bg-gray-50">
+            <div class="space-y-3">
+                <div class="py-2 border-b border-gray-200 last:border-b-0">
+                    <p class="text-xs font-bold text-gray-600 uppercase m-0">Inventarnummer:</p>
+                    <p class="text-sm text-gray-900 m-0 mt-1">{{ scannedItem.id }}</p>
+                </div>
+                <div class="py-2 border-b border-gray-200 last:border-b-0">
+                    <p class="text-xs font-bold text-gray-600 uppercase m-0">Beschreibung:</p>
+                    <p class="text-sm text-gray-900 m-0 mt-1 wrap-break-word">{{ scannedItem.description }}</p>
+                </div>
+                <div class="py-2 border-b border-gray-200 last:border-b-0">
+                    <p class="text-xs font-bold text-gray-600 uppercase m-0">Seriennummer:</p>
+                    <p class="text-sm text-gray-900 m-0 mt-1 wrap-break-word">{{ scannedItem.serial_number }}</p>
+                </div>
+                <div class="py-2 border-b border-gray-200 last:border-b-0">
+                    <p class="text-xs font-bold text-gray-600 uppercase m-0">Standort:</p>
+                    <p class="text-sm text-gray-900 m-0 mt-1 wrap-break-word">{{ scannedItem.location }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex gap-2 justify-end">
+            <button mat-button (click)="resumeScanning()">Abbrechen</button>
+            <button mat-raised-button color="primary" (click)="navigateToItem()">Aufrufen</button>
+        </div>
+        }
+    </div>
+</app-card>

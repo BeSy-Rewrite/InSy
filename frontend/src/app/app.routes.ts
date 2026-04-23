@@ -8,6 +8,7 @@ import { LoginPageComponent } from './pages/login/login-page.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { OrdersComponent } from './pages/orders/orders.component';
 import { ReallyTheHomepageComponent } from './pages/really-the-homepage/really-the-homepage.component';
+import { ScannerComponent } from './pages/scanner/scanner.component';
 import { StatisticsComponent } from './pages/statistics/statistics.component';
 import { UnauthorisedComponent } from './pages/unauthorised/unauthorised.component';
 import { InventoryItemChangesResolver } from './resolver/changes.resolver';
@@ -26,12 +27,12 @@ export const routes: Routes = [
   },
   {
     title: 'Space Sim',
-    path: 'really-the-homepage',
+    path: 'easter-egg',
     component: ReallyTheHomepageComponent,
   },
   {
     title: 'InSy',
-    path: 'home',
+    path: 'statistics',
     component: StatisticsComponent,
     canActivate: [DefaultGuardService],
   },
@@ -97,7 +98,13 @@ export const routes: Routes = [
     resolve: {
       isNew: () => true,
     }
+  },
 
+  {
+    title: 'Scanner',
+    path: 'scan',
+    component: ScannerComponent,
+    canActivate: [DefaultGuardService],
   },
 
   {
