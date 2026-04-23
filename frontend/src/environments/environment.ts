@@ -6,7 +6,7 @@ export const environment = {
     footerLinks: [
         { name: 'BeSy', link: 'https://besy.hs-esslingen.com' },
     ],
-    bugReportUrl: 'https://github.com/kr1pt0n05/Inventarisierungsmodul/issues/new/choose',
+    bugReportUrl: 'https://github.com/besy-rewrite/InSy/issues/new/choose',
 
     /**
      * Regular expression for validating price input formats.
@@ -21,7 +21,7 @@ export const environment = {
     priceRegEx: /^\s*(\d+([.,]\d{1,2})?|(\d{1,3}(\.\d{3})*(,\d{1,2})?)|(\d{1,3}(,\d{3})*(\.\d{1,2})?))\s*€?\s*$/,
 
     clientId: "insy",
-    issuer: "https://auth.insy.hs-esslingen.com/realms/insy",
+    issuer: "https://auth.dev.hs-esslingen.com/realms/besy",
     requiredRole: "inventory-manager",
 
     // Inventory pages cache duration in milliseconds
