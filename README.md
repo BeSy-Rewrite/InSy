@@ -5,6 +5,7 @@
 **Demo-Login:**
 - Benutzername: `demo@hs-esslingen.de`
 - Passwort: `4dx\("&}+H*em/p5[G0Yx.9fW$SiK+H]`
+- Hinweis: Dies ist ein öffentlicher Demo-Zugang mit eingeschränkten Rechten.
 
 Inventarisierungsmodul zur Bestellsoftware für die Hochschule Esslingen in Kooperation mit KEIM.
 
